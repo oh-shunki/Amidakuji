@@ -1,0 +1,15 @@
+{% extends 'amida.html' %}
+
+{% block title %}⑨あみだくじ画面（開封済）{% endblock %}
+
+{% block content %}
+	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
+
+	<!-- これはエラーメッセージの表示（あれば） -->
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-info alert-dismissible fade show" role="error">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endfor %}
+{% endblock %}

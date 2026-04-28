@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}①初期画面{% endblock %}
+
+{% block content %}
+  <div class="actions text-center">
+    <a href="{{ url_for('create.create') }}" class="btn btn-primary">あみだくじ作成</a>
+  </div>
+{% endblock %}

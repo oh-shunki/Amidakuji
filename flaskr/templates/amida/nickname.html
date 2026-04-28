@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}⑥ニックネーム入力画面{% endblock %}
+
+{% block content %}
+	<form action="{{ url_for('amida.do_draw', amida_id_b62=amida_id_b62) }}" method="post">
+		<input type="hidden" name="line_no" value="{{ request.args.get('line_no') }}">
+		<div class='mb-3'>
+			<label class='form-label'>ニックネーム</label>
+			<input type="text" name="nickname" class="form-control" placeholder="なまえ" required>
+		</div>
+		<div class='mb-3'>
+			<label class='form-label'>パスワード</label>
+			<input type="password" name="password" class="form-control" placeholder="********" required>
+		</div>
+		{% for message in get_flashed_messages() %}
+			<div class="alert alert-info alert-dismissible fade show" role="error">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endfor %}
+		<div class='d-flex gap-2'>
+			<button type="submit" class="btn btn-primary">OK</button>
+		</div>
+	</form>
+{% endblock %}

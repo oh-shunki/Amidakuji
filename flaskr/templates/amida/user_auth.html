@@ -1,0 +1,22 @@
+{% extends 'amida.html' %}
+
+{% block title %}④ユーザ認証画面）{% endblock %}
+
+{% block content %}
+	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
+
+	<form method="post">
+		<!-- フォームはここ -->
+		<p>パスワードを入力してください</p>
+		<input type="password" name="user_password" class="form-control" required>
+		<button type='submit' class='btn btn-success'>OK</button>
+
+		<!-- これはエラーメッセージの表示（あれば） -->
+		{% for message in get_flashed_messages() %}
+			<div class="alert alert-info alert-dismissible fade show" role="error">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endfor %}
+	</form>
+{% endblock %}

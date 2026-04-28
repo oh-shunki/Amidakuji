@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}ページが見つかりません{% endblock %}
+
+{% block header %}
+  <h1>404 Not Found</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading">このページが見つかりません。</h4>
+    <p>URLが間違っているか、ページが移動・削除された可能性があります。</p>
+  </div>
+  <a href="{{ url_for('index.index') }}" class="btn btn-primary">トップページへ戻る</a>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}システムエラー{% endblock %}
+
+{% block header %}
+  <h1>システムエラー (500)</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">申し訳ありません。</h4>
+    <p>システム内部でエラーが発生しました。</p>
+    <p class="mb-0">データベースに接続できないか、一時的な障害の可能性があります。しばらく待ってから再読み込みしてください。</p>
+    <hr>
+    
+    {% if error and error.description %}
+        <p class="mt-3 text-muted small">詳細: {{ error.description }}</p>
+    {% endif %}
+
+  </div>
+
+  <a href="{{ url_for('index.index') }}" class="btn btn-secondary">トップページへ戻る</a>
+{% endblock %}

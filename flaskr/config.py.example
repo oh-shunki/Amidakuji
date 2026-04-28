@@ -1,0 +1,6 @@
+class Config:
+    DB_HOST = "<PUT_YOUR_DB_HOST_HERE>"
+    DB_USER = "<PUT_YOUR_DB_USER_HERE>"
+    DB_PASSWORD = "<PUT_UOUR_DB_PASSWORD_HERE>"
+    DB_NAME = "amidakuji_db"
+    SECRET_KEY = "<PUT_SECRET_KEY_HERE>"

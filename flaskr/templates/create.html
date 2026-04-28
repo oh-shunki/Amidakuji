@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}②あみだくじ設定画面{% endblock %}
+
+{% block content %}
+	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
+
+	<form method="post">
+		<!-- フォームはここ -->
+
+		<!-- これはエラーメッセージの表示（あれば） -->
+		{% for message in get_flashed_messages() %}
+			<div class="alert alert-info alert-dismissible fade show" role="error">
+				{{ message }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endfor %}
+	</form>
+
+
+{% endblock %}
