@@ -1,0 +1,11 @@
+[project]
+name = "amidakuji"
+version = "0.1.0"
+description = "あみだくじアプリ"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "flask>=3.1.3",
+    "pybase62>=1.0.0",
+    "pymysql>=1.1.2",
+]
