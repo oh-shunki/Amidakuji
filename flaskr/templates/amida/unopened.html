@@ -6,12 +6,12 @@
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
 	{#
-	{% for line in lines %}
+	{% for line in results["lines"] %}
 		<a href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=line.line_no) }}">
 			{{ line.line_no }}これにする
 		</a>
 	{% endfor %}
-	{% if result.get("option_hide_item") %}
+	{% if results.get("option_hide_item") %}
 		option_hide_item is on
 	{% else %}
 		option_hide_item is off
