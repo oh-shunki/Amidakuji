@@ -105,7 +105,7 @@ def do_open(amida_id_b62):
     return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
 
 @bp.route("do_draw/conform")
-def create_conform(amida_id_b62, msg):
+def do_draw_conform(amida_id_b62):
     """⑦結果確認画面制御"""
     return conform(amida_id_b62, mode="do_draw")
 
