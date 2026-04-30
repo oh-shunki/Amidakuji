@@ -5,6 +5,11 @@
 {% block content %}
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
+	<p>amida_id:{{ results.amida_id }}</p>
+		{% for line in results.lines %}
+			<p>{{ line.line_id }}:{{ line.name }}</p>
+		{% endfor %}
+
 	<!-- これはエラーメッセージの表示（あれば） -->
 	{% for message in get_flashed_messages() %}
 		<div class="alert alert-info alert-dismissible fade show" role="error">
