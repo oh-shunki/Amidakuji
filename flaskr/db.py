@@ -334,28 +334,6 @@ def get_line_status_from_line(line_id) -> LineStatus:
 
 ## ---- アイテム操作関数 ----
 
-def add_items(amida_id, *items) -> bool:
-    """アイテムを登録
-    Return
-        成功：True
-        失敗：False
-    """
-    db = get_db()
-    try:
-        with db.cursor() as cursor:
-            # アイテムを入れる
-            for item in items:
-                cursor.execute("INSERT ...")
-            # ハズレを入れる
-            cursor.execute("INSERT ...")
-
-        db.commit()
-        return True
-
-    except pymysql.Error:
-        db.rollback()
-        return False
-
 def get_item(item_id) -> dict:
     """アイテムの情報を取得
     Return
