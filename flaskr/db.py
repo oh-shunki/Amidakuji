@@ -260,7 +260,7 @@ def get_lines_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM lines WHERE amida_id = %s",
+                    "SELECT * FROM amida_lines WHERE amida_id = %s",
                     (amida_id,)
             )
             result = cursor.fetchall()
@@ -280,7 +280,7 @@ def get_line(line_id) -> dict:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM lines WHERE line_id = %s",
+                    "SELECT * FROM amida_lines WHERE line_id = %s",
                     (line_id,)
             )
             result = cursor.fetchone()
@@ -334,7 +334,7 @@ def get_item(item_id) -> dict:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM items WHERE item_id = %s",
+                    "SELECT * FROM amida_items WHERE item_id = %s",
                     (item_id,)
             )
             result = cursor.fetchone()
@@ -353,7 +353,7 @@ def get_items_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM items WHERE amida_id = %s",
+                    "SELECT * FROM amida_items WHERE amida_id = %s",
                     (amida_id,)
             )
             result = cursor.fetchall()
