@@ -30,25 +30,57 @@ def close_db(e=None):
 
 ## ---- あみだくじ操作関数 ----
 
-def create_amida(title, line_count, admin_password_hash,
-                 option_auto_open = False,
-                 option_hide_items = True,
-                 user_password_hash = None) -> uuid.UUID:
+def create_amida(amida: dict, items: list) -> uuid.UUID:
     """あみだくじを作成
     Return
         成功：あみだくじID
         失敗：Noone
     """
     amida_id = uuid.uuid7()
+    title = amida.get("title")
+    line_count = amida.get("line_count")
+    option_auto_open = amida.get("option_auto_open", False)
+    option_hide_items = amida.get("option_hide_items", True)
+    admin_password_hash = amida.get("admin_password_hash")
+    user_password_hash = amida.get("user_password_hash", None)
+    is_opened = False
+
     db = get_db()
     try:
         with db.cursor() as cursor:
-            # あみだくじを作成
-            cursor.execute("INSERT ...")
+            # あみだくじ作成
+            cursor.execute("""
+                    INSERT INTO amidas (amida_id, title, line_count,
+                        option_auto_open, option_hide_items,
+                        admin_password_hash, user_password_hash,
+                        is_opened)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (amida_id, title, line_count,
+                        option_auto_open, option_hide_items,
+                        admin_password_hash, user_password_hash,
+                        is_opened)
+                    )
 
-            # 線を作成
+            # 線作成
             for line_no in range(line_count):
-                cursor.execute("...")
+                cursor.execute(
+                        "INSERT INTO amida_lines (amida_id, line_no)"
+                        "VALUES (%s, %s)", (amida_id, line_no)
+                        )
+
+            # アイテム作成
+            for item in items:
+                cursor.execute(
+                        "INSERT INTO amida_items (amida_id, title)"
+                        "VALUES (%s, %s)", (amida_id, item)
+                        )
+
+            if len(items) < line_count:
+                item = "はずれ"
+                cursor.execute(
+                        "INSERT INTO amida_items (amida_id, title)"
+                        "VALUES (%s, %s)", (amida_id, item)
+                        )
 
         db.commit()
         return amida_id
