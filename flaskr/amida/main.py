@@ -113,16 +113,3 @@ def do_draw_conform(amida_id_b62):
 def do_open_conform(amida_id_b62):
     """⑫開封確認画面制御"""
     return conform(amida_id_b62, mode="do_open")
-
-
-# @bp.route("/opened_test")
-# def opened_test(amida_id_b62):
-#     results = {
-#         "amida_id":"test_id",
-#         "lines": [
-#             {"line_id":1,"name":"Aさん"},
-#             {"line_id":2,"name":"Bさん"}
-#         ]
-#     }
-
-#     return render_template("amida/opened.html",results=results)
