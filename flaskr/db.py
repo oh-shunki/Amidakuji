@@ -321,16 +321,102 @@ def get_line(line_id) -> dict:
     except pymysql.Error:
         return None
 
-def get_line_no_from_line(line_id):
-    """線にアイテム番号を取得"""
+def get_line_no_from_line(line_id) -> int:
+    """線に線の番号を取得
+    Return
+        成功：線の番号
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT line_no FROM amida_lines WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result["line_no"] if result else None
 
-def get_item_id_from_line(line_id):
-    """線にアイテム番号を取得"""
+    except pymysql.Error:
+        return None
+
+def get_item_id_from_line(line_id) -> int:
+    """線にアイテムIDを取得
+    Return
+        成功：アイテムID
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT item_id FROM amida_lines WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result["item_id"] if result else None
+
+    except pymysql.Error:
+        return None
 
 def get_line_status_from_line(line_id) -> LineStatus:
-    """線に状態を取得"""
+    """線に状態を取得
+    Return
+        成功：抽籤の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT status FROM amida_lines WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            if result:
+                return LineStatus(result["status"])
+            return None
 
+    except pymysql.Error:
+        return None
 
+def get_draw_from_line(line_id) -> dict:
+    """線に抽籤の情報を取得
+    Return
+        成功：抽籤の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT * FROM amida_draws WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_draw_nickname_from_line(line_id) -> str:
+    """線に抽籤参加者のニックネームを取得
+    Return
+        成功：抽籤参加者のニックネーム
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT nickname FROM amida_draws WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result["nickname"] if result else None
+
+    except pymysql.Error:
+        return None
 
 ## ---- アイテム操作関数 ----
 
