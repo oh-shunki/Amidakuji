@@ -30,25 +30,57 @@ def close_db(e=None):
 
 ## ---- あみだくじ操作関数 ----
 
-def create_amida(title, line_count, admin_password_hash,
-                 option_auto_open = False,
-                 option_hide_items = True,
-                 user_password_hash = None) -> uuid.UUID:
+def create_amida(amida: dict, items: list) -> uuid.UUID:
     """あみだくじを作成
     Return
         成功：あみだくじID
         失敗：Noone
     """
     amida_id = uuid.uuid7()
+    title = amida.get("title")
+    line_count = amida.get("line_count")
+    option_auto_open = amida.get("option_auto_open", False)
+    option_hide_items = amida.get("option_hide_items", True)
+    admin_password_hash = amida.get("admin_password_hash")
+    user_password_hash = amida.get("user_password_hash", None)
+    is_opened = False
+
     db = get_db()
     try:
         with db.cursor() as cursor:
-            # あみだくじを作成
-            cursor.execute("INSERT ...")
+            # あみだくじ作成
+            cursor.execute("""
+                    INSERT INTO amidas (amida_id, title, line_count,
+                        option_auto_open, option_hide_items,
+                        admin_password_hash, user_password_hash,
+                        is_opened)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (amida_id, title, line_count,
+                        option_auto_open, option_hide_items,
+                        admin_password_hash, user_password_hash,
+                        is_opened)
+                    )
 
-            # 線を作成
+            # 線作成
             for line_no in range(line_count):
-                cursor.execute("...")
+                cursor.execute(
+                        "INSERT INTO amida_lines (amida_id, line_no)"
+                        "VALUES (%s, %s)", (amida_id, line_no)
+                        )
+
+            # アイテム作成
+            for item in items:
+                cursor.execute(
+                        "INSERT INTO amida_items (amida_id, title)"
+                        "VALUES (%s, %s)", (amida_id, item)
+                        )
+
+            if len(items) < line_count:
+                item = "はずれ"
+                cursor.execute(
+                        "INSERT INTO amida_items (amida_id, title)"
+                        "VALUES (%s, %s)", (amida_id, item)
+                        )
 
         db.commit()
         return amida_id
@@ -260,7 +292,7 @@ def get_lines_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM lines WHERE amida_id = %s",
+                    "SELECT * FROM amida_lines WHERE amida_id = %s",
                     (amida_id,)
             )
             result = cursor.fetchall()
@@ -280,7 +312,7 @@ def get_line(line_id) -> dict:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM lines WHERE line_id = %s",
+                    "SELECT * FROM amida_lines WHERE line_id = %s",
                     (line_id,)
             )
             result = cursor.fetchone()
@@ -289,40 +321,104 @@ def get_line(line_id) -> dict:
     except pymysql.Error:
         return None
 
-def get_line_no_from_line(line_id):
-    """線にアイテム番号を取得"""
-
-def get_item_id_from_line(line_id):
-    """線にアイテム番号を取得"""
-
-def get_line_status_from_line(line_id) -> LineStatus:
-    """線に状態を取得"""
-
-
-
-## ---- アイテム操作関数 ----
-
-def add_items(amida_id, *items) -> bool:
-    """アイテムを登録
+def get_line_no_from_line(line_id) -> int:
+    """線に線の番号を取得
     Return
-        成功：True
-        失敗：False
+        成功：線の番号
+        失敗：None
     """
     db = get_db()
     try:
         with db.cursor() as cursor:
-            # アイテムを入れる
-            for item in items:
-                cursor.execute("INSERT ...")
-            # ハズレを入れる
-            cursor.execute("INSERT ...")
-
-        db.commit()
-        return True
+            cursor.execute(
+                    "SELECT line_no FROM amida_lines WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result["line_no"] if result else None
 
     except pymysql.Error:
-        db.rollback()
-        return False
+        return None
+
+def get_item_id_from_line(line_id) -> int:
+    """線にアイテムIDを取得
+    Return
+        成功：アイテムID
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT item_id FROM amida_lines WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result["item_id"] if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_line_status_from_line(line_id) -> LineStatus:
+    """線に状態を取得
+    Return
+        成功：抽籤の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT status FROM amida_lines WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            if result:
+                return LineStatus(result["status"])
+            return None
+
+    except pymysql.Error:
+        return None
+
+def get_draw_from_line(line_id) -> dict:
+    """線に抽籤の情報を取得
+    Return
+        成功：抽籤の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT * FROM amida_draws WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_draw_nickname_from_line(line_id) -> str:
+    """線に抽籤参加者のニックネームを取得
+    Return
+        成功：抽籤参加者のニックネーム
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT nickname FROM amida_draws WHERE line_id = %s",
+                    (line_id,)
+            )
+            result = cursor.fetchone()
+            return result["nickname"] if result else None
+
+    except pymysql.Error:
+        return None
+
+## ---- アイテム操作関数 ----
 
 def get_item(item_id) -> dict:
     """アイテムの情報を取得
@@ -334,7 +430,7 @@ def get_item(item_id) -> dict:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM items WHERE item_id = %s",
+                    "SELECT * FROM amida_items WHERE item_id = %s",
                     (item_id,)
             )
             result = cursor.fetchone()
@@ -353,11 +449,135 @@ def get_items_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM items WHERE amida_id = %s",
+                    "SELECT * FROM amida_items WHERE amida_id = %s",
                     (amida_id,)
             )
             result = cursor.fetchall()
             return result if result else None
+
+    except pymysql.Error:
+        return None
+
+## ---- 抽籤操作関数 ----
+
+def get_draw(draw_id) -> dict:
+    """抽籤の情報を取得
+    Return
+        成功：抽籤の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT * FROM amida_draws WHERE draw_id = %s",
+                    (draw_id,)
+            )
+            result = cursor.fetchone()
+            return result if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_draws_from_amida(amida_id) -> list:
+    """あみだくじに抽籤を一括取得
+    Return
+        成功：あみだくじに抽籤の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT * FROM amida_draws WHERE amida_id = %s",
+                    (amida_id,)
+            )
+            result = cursor.fetchall()
+            return result if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_line_id_from_draw(draw_id) -> int:
+    """抽籤に線のIDを取得
+    Return
+        成功：線のID
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT line_id FROM amida_draws WHERE draw_id = %s",
+                    (draw_id,)
+            )
+            result = cursor.fetchone()
+            return result["line_id"] if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_line_no_from_draw(draw_id) -> int:
+    """抽籤に線の番号を取得
+    Return
+        成功：線の番号
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute("""
+                    SELECT l.line_no
+                    FROM amida_lines l
+                    INNER JOIN amida_draws d ON l.line_id = d.line_id
+                    WHERE d.draw_id = %s
+                    """, (draw_id,)
+            )
+            result = cursor.fetchone()
+            return result["line_no"] if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_nickname_from_draw(draw_id) -> str:
+    """抽籤に参加者のニックネームを取得
+    Return
+        成功：参加者のニックネーム
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT nickname FROM amida_draws WHERE draw_id = %s",
+                    (draw_id,)
+            )
+            result = cursor.fetchone()
+            return result["nickname"] if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_password_hash_from_draw(draw_id) -> str:
+    """抽籤にパスワードハッシュを取得
+    Return
+        パスワードあり：パスワードハッシュ
+        パスワードなし：空文字列
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                "SELECT password_hash FROM draws WHERE draw_id = %s",
+                (draw_id,)
+            )
+            result = cursor.fetchone()
+            if result is None:
+                return None
+
+            password_hash = result.get("password_hash")
+            return password_hash if password_hash else ""
 
     except pymysql.Error:
         return None
