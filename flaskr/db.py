@@ -593,14 +593,46 @@ def do_draw(amida_id, line_no, nickname, password_hash) -> bool:
     db = get_db()
     try:
         with db.cursor() as cursor:
-            cursor.execute("SELECT ...")
-            line_id = cursor.fetchone()
+            # 開封状態チェック
+            cursor.execute(
+                    "SELECT is_opened FROM amidas WHERE amida_id = %s",
+                    (amida_id,)
+            )
+            result = cursor.fetchone()
+            if not result:
+                return False
+            if result.get("is_opened"):
+                return False
 
-            # line.status のチェック
-            return False
+            # 線の情報を取得
+            cursor.execute("""
+                    SELECT line_id, status FROM amida_lines
+                    WHERE amida_id = %s AND line_no = %s
+                    FOR UPDATE
+                    """, (amida_id, line_no)
+            )
+            result = cursor.fetchone()
+            if not result:
+                return False
+            line_id = result.get("line_id")
+            line_status = LineStatus(result.get("status"))
 
-            cursor.execute("INSERT ...")
-            # UPDATE line.status = LineStatus(DRAWN)
+            # 線の状態チェック
+            if line_status != LineStatus.READY:
+                return False
+
+            # 抽籤
+            cursor.execute("""
+                    INSERT INTO amida_draws (amida_id, line_id, nickname,
+                        password_hash)
+                    VALUES (%s, %s, %s, %s)
+                    """, (amida_id, line_id, nickname, password_hash)
+            )
+            cursor.execute(
+                    "UPDATE amida_lines SET status = 'drawn'"
+                    "WHERE line_id = %s", (line_id,)
+            )
+
         db.commit()
         return True
 
