@@ -62,7 +62,11 @@ def user_auth_required(view):
     @functools.wraps(view)
     def wrapped_view(*args, **kwargs):
         amida_id_b62 = kwargs.get("amida_id_b62")
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
+        try:
+            amida_id = amida_id_b62_to_uuid(amida_id_b62)
+        except ValueError:
+            # このIDのはBase62型ではない
+            abort(404)
 
         user_password_hash = db.get_user_password_hash_from_amida(amida_id)
         if user_password_hash:
