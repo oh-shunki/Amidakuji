@@ -6,14 +6,14 @@
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
 	<p>amida_id:{{ results.amida_id }}</p>
-		{% for line in results.lines %}
+		{% for line in results.amida_lines %}
 			<p>{{ line.line_id }}:{{ line.nickname }}</p>
 		{% endfor %}
 
 	<h2>items確認</h2>
 
-	{% if results.items %}
-	{% for item in results.items %}
+	{% if results.amida_items %}
+	{% for item in results.amida_items %}
 		<p>{{ item.title }}</p>
 	{% endfor %}
 

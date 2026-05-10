@@ -9,27 +9,25 @@ def opened(amida):
 
     db_lines = db.get_lines_from_amida(amida_id)
     db_items = db.get_items_from_amida(amida_id)
-    
-    items = db_items if db_items else []
 
-    # lines = db.get_lines_from_amida(amida_id)
+    items = db_items if db_items else []
 
     lines = []
 
     if db_lines:
         for line in db_lines:
             draw = db.get_draw_from_line(line["line_id"])
-            
+
             if draw:
                 nickname = draw["nickname"]
             else:
                 nickname = "未抽籤"
-                
+
             lines.append({
                 "line_id": line["line_id"],
                 "nickname":nickname
             })
-    else:   
+    else:
         lines = [
             {"line_id":1,"nickname":"Aさん"},
             {"line_id":2,"nickname":"Bさん"}
@@ -37,10 +35,7 @@ def opened(amida):
 
     results = {}
     results["amida_id"] = amida_id
-    results["lines"] = lines
-    results["items"] = items
+    results["amida_lines"] = lines
+    results["amida_items"] = items
 
     return results
-
-
-
