@@ -12,14 +12,9 @@
 
 	<h2>items確認</h2>
 
-	{% if results.amida_items %}
 	{% for item in results.amida_items %}
 		<p>{{ item.title }}</p>
 	{% endfor %}
-
-	{% else %}
-		<p>itemsはまだありません</p>
-	{% endif %}
 
 	<!-- これはエラーメッセージの表示（あれば） -->
 	{% for message in get_flashed_messages() %}
