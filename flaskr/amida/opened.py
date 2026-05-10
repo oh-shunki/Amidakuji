@@ -13,6 +13,9 @@ def opened(amida):
     db_lines = db.get_lines_from_amida(amida_id)
     print("DBから取得したlines",db_lines)
 
+    db_items = db.get_items_from_amida(amida_id)
+    print("DBから取得したitems",db_items)
+
     # lines = db.get_lines_from_amida(amida_id)
     lines = [
         {"line_id":1,"name":"Aさん"},
