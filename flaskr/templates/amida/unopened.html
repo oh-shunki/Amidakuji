@@ -5,7 +5,6 @@
 {% block content %}
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
-	{#
 	{% for line in results["lines"] %}
 		<a href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=line.line_no) }}">
 			{{ line.line_no }}これにする
@@ -16,7 +15,6 @@
 	{% else %}
 		option_hide_item is off
 	{% endif %}
-	#}
 
 	<!-- これはエラーメッセージの表示（あれば） -->
 	{% for message in get_flashed_messages() %}
