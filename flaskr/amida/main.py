@@ -133,12 +133,12 @@ def do_open(amida_id_b62):
     flash("正しい管理パスワードを入力してください")
     return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
 
-@bp.route("do_draw/conform")
+@bp.route("/do_draw/conform")
 def do_draw_conform(amida_id_b62):
     """⑦結果確認画面制御"""
     return conform(amida_id_b62, mode="do_draw")
 
-@bp.route("do_open/conform")
+@bp.route("/do_open/conform")
 def do_open_conform(amida_id_b62):
     """⑫開封確認画面制御"""
     return conform(amida_id_b62, mode="do_open")
