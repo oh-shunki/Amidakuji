@@ -85,7 +85,9 @@ def do_draw(amida_id_b62):
 
     if error:
         flash(error)
-        return redirect(url_for("amida.nickname.nickname", amida_id_b62=amida_id_b62))
+        return redirect(url_for("amida.nickname.nickname",
+                                amida_id_b62=amida_id_b62,
+                                line_no=line_no))
 
     password_hash = generate_password_hash(password)
 
