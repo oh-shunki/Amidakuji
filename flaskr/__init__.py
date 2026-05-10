@@ -1,7 +1,10 @@
-from flask import Flask, redirect, render_template
+import re
+from flask import Flask, redirect, render_template, request
+from werkzeug.exceptions import HTTPException
 
 from . import config
 from . import db
+from .utils import amida_id_b62_to_uuid
 
 def create_app():
     app = Flask(__name__)
@@ -20,12 +23,29 @@ def create_app():
     app.teardown_appcontext(db.close_db)
 
     # エラーハンドラー
-    @app.errorhandler(404)
-    def page_not_found(e):
-        return render_template("404.html"), 404
+    @app.errorhandler(Exception)
+    def handle_unhandled_exception(e):
+        if isinstance(e, HTTPException):
+            error = {"code": e.code, "description": e.description}
+        else:
+            error = {"code": 500, "description": "予期せぬエラーが発生しました"}
 
-    @app.errorhandler(500)
-    def internal_server_error(e):
-        return render_template("500.html", error=e), 500
+        view_args = request.view_args or {}
+        amida_id_b62 = view_args.get("amida_id_b62")
+
+        parts = request.path.split("/")
+        if not amida_id_b62 and len(parts) >= 2:
+            amida_id_b62 = parts[1]
+
+        if amida_id_b62:
+            if re.fullmatch(r'[a-zA-Z0-9]{20,22}', amida_id_b62):
+                try:
+                    amida_id_b62_to_uuid(amida_id_b62)
+                except (ValueError, TypeError):
+                    amida_id_b62 = None
+            else:
+                amida_id_b62 = None
+
+        return render_template("error.html", error=error, amida_id_b62=amida_id_b62), error["code"]
 
     return app
