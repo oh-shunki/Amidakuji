@@ -10,6 +10,9 @@ def opened(amida):
     print("opened.pyに入りました")
     print(amida)
 
+    db_lines = db.get_lines_from_amida(amida_id)
+    print("DBから取得したlines",db_lines)
+
     # lines = db.get_lines_from_amida(amida_id)
     lines = [
         {"line_id":1,"name":"Aさん"},
