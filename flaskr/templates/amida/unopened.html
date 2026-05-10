@@ -17,10 +17,10 @@
         {% endif %}
     {% endfor %}
 
-    {% if results.get("option_hide_item") %}
-        option_hide_item is on
+    {% if results.option_hide_items %}
+        option_hide_items is on
     {% else %}
-        option_hide_item is off
+        option_hide_items is off
     {% endif %}
 
     <!-- これはエラーメッセージの表示（あれば） -->
