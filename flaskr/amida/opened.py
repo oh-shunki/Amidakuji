@@ -7,15 +7,9 @@ def opened(amida):
     """⑨あみだくじ（開封済）画面制御"""
     amida_id = amida.get("amida_id")
 
-    print("opened.pyに入りました")
-    print(amida)
-
     db_lines = db.get_lines_from_amida(amida_id)
-    print("DBから取得したlines",db_lines)
-
     db_items = db.get_items_from_amida(amida_id)
-    print("DBから取得したitems",db_items)
-
+    
     items = db_items if db_items else []
 
     # lines = db.get_lines_from_amida(amida_id)
@@ -25,8 +19,7 @@ def opened(amida):
     if db_lines:
         for line in db_lines:
             draw = db.get_draw_from_line(line["line_id"])
-            print("線ごとの抽籤情報",draw)
-
+            
             if draw:
                 nickname = draw["nickname"]
             else:
@@ -49,10 +42,5 @@ def opened(amida):
 
     return results
 
-if __name__ == "__main__":
-    test_amida={
-        "amida_id": "test-id"
-    }
 
-    print(opened(test_amida))
 
