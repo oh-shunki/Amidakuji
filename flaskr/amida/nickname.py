@@ -30,4 +30,4 @@ def nickname(amida_id_b62):
     # if エラー: flash()
     # else: return redirect(url_for("amida.do_draw.conform", amida_id_b62=amida_id_b62))
 
-    return render_template("amida/nickname.html")
+    return render_template("amida/nickname.html", amida_id_b62=amida_id_b62)

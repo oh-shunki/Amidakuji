@@ -21,6 +21,7 @@
 		{% endfor %}
 		<div class='d-flex gap-2'>
 			<button type="submit" class="btn btn-primary">OK</button>
+            <a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-secondary">キャンセル</a>
 		</div>
 	</form>
 {% endblock %}
