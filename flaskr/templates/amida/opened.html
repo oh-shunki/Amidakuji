@@ -10,6 +10,12 @@
 			<p>{{ line.line_id }}:{{ line.nickname }}</p>
 		{% endfor %}
 
+	<h2>items確認</h2>
+
+	{% for item in results.items %}
+		<p>{{ item }}</p>
+	{% endfor %}
+
 	<!-- これはエラーメッセージの表示（あれば） -->
 	{% for message in get_flashed_messages() %}
 		<div class="alert alert-info alert-dismissible fade show" role="error">
