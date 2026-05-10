@@ -43,6 +43,7 @@ def opened(amida):
     results = {}
     results["amida_id"] = amida_id
     results["lines"] = lines
+    results["items"] = db_items
 
     return results
 
