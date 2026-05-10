@@ -3,24 +3,31 @@
 {% block title %}⑤あみだくじ画面（未開封）{% endblock %}
 
 {% block content %}
-	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
+    <h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
-	{% for line in results["lines"] %}
-		<a href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=line.line_no) }}">
-			{{ line.line_no }}これにする
-		</a>
-	{% endfor %}
-	{% if results.get("option_hide_item") %}
-		option_hide_item is on
-	{% else %}
-		option_hide_item is off
-	{% endif %}
+    {% for nickname in results.amida_lines %}
+        {% if not nickname %}
+            <p>
+                <a href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=loop.index0) }}">
+                        これにする
+                </a>
+            </p>
+        {% else %}
+            <p>{{ nickname }}</p>
+        {% endif %}
+    {% endfor %}
 
-	<!-- これはエラーメッセージの表示（あれば） -->
-	{% for message in get_flashed_messages() %}
-		<div class="alert alert-info alert-dismissible fade show" role="error">
-			{{ message }}
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-	{% endfor %}
+    {% if results.get("option_hide_item") %}
+        option_hide_item is on
+    {% else %}
+        option_hide_item is off
+    {% endif %}
+
+    <!-- これはエラーメッセージの表示（あれば） -->
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-info alert-dismissible fade show" role="error">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
 {% endblock %}
