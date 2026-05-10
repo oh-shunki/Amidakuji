@@ -18,8 +18,8 @@ def opened(amida):
 
     # lines = db.get_lines_from_amida(amida_id)
     lines = [
-        {"line_id":1,"name":"Aさん"},
-        {"line_id":2,"name":"Bさん"}
+        {"line_id":1,"nickname":"Aさん"},
+        {"line_id":2,"nickname":"Bさん"}
     ]
 
     results = {}
