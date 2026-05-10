@@ -1,5 +1,5 @@
 """あみだくじ全体制御"""
-from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
     flash, redirect, render_template, request, session, url_for, abort
     )
@@ -59,16 +59,43 @@ def do_draw(amida_id_b62):
     if is_opened:
         abort(409)
 
-    # 抽籤処理はここ
+    line_count = amida.get("line_count")
 
-    if successed:
-        # 抽籤成功
+    # line_no の検証
+    try:
+        line_no = int(request.form.get("line_no"))
+        if not 0 <= line_no < line_count:
+            raise ValueError("Invalid line_no")
+
+    except (ValueError, TypeError) as e:
+        abort(400, description=e)
+
+    nickname = request.form.get("nickname", "").strip()
+    password = request.form.get("password", "")
+
+    error = None
+    if not nickname:
+        error = "ニックネームは必ず入力して下さい"
+    elif not 1 <= len(nickname) <= 6:
+        error = "ニックネームは6文字以内で入力してください"
+    elif not password:
+        error = "パスワードは必ず入力して下さい"
+    elif not (password.isascii() and 1 <= len(password) <= 20):
+        error = "パスワードは 1～20 文字で入力してください"
+
+    if error:
+        flash(error)
+        return redirect(url_for("amida.nickname.nickname", amida_id_b62=amida_id_b62))
+
+    password_hash = generate_password_hash(password)
+
+    success = db.do_draw(amida_id, line_no, nickname, password_hash)
+    if success:
         flash("成功しました")
-        return redirect(url_for("amida.do_draw.conform", amida_id_b62=amida_id_b62))
+    else:
+        flash("失敗しました")
 
-    # 抽籤失敗
-    flash("失敗しました")
-    return redirect(url_for("amida.do_draw.conform", amida_id_b62=amida_id_b62))
+    return redirect(url_for("amida.do_draw_conform", amida_id_b62=amida_id_b62))
 
 @bp.route("/do_open", methods=("POST",))
 def do_open(amida_id_b62):
