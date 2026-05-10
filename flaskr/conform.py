@@ -6,6 +6,8 @@ from .utils import amida_id_b62_to_uuid
 
 def conform(amida_id_b62 = None, mode=None):
     """確認画面処理"""
+    results = {}
+
     if amida_id_b62:
         try:
             amida_id = amida_id_b62_to_uuid(amida_id_b62)
@@ -19,4 +21,8 @@ def conform(amida_id_b62 = None, mode=None):
         if amida is None:
             abort(404)
 
-    return render_template("conform.html", amida_id_b62=amida_id_b62, mode=mode)
+        results["title"] = amida.get("title")
+
+    return render_template("conform.html", amida_id_b62=amida_id_b62,
+                                           mode=mode,
+                                           results=results)
