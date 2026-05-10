@@ -16,6 +16,8 @@ def opened(amida):
     db_items = db.get_items_from_amida(amida_id)
     print("DBから取得したitems",db_items)
 
+    items = db_items if db_items else []
+
     # lines = db.get_lines_from_amida(amida_id)
 
     lines = []
@@ -43,7 +45,7 @@ def opened(amida):
     results = {}
     results["amida_id"] = amida_id
     results["lines"] = lines
-    results["items"] = db_items
+    results["items"] = items
 
     return results
 
