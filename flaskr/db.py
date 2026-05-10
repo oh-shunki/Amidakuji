@@ -292,7 +292,7 @@ def get_lines_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM amida_lines WHERE amida_id = %s",
+                    "SELECT * FROM amida_lines WHERE amida_id = %s ORDER BY line_no ASC",
                     (amida_id,)
             )
             result = cursor.fetchall()
