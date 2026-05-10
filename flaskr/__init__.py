@@ -28,6 +28,8 @@ def create_app():
         if isinstance(e, HTTPException):
             error = {"code": e.code, "description": e.description}
         else:
+            if app.debug:
+                raise e
             error = {"code": 500, "description": "予期せぬエラーが発生しました"}
 
         view_args = request.view_args or {}
