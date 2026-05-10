@@ -22,11 +22,14 @@ def opened(amida):
 
     if db_lines:
         for line in db_lines:
+            draw = db.get_draw_from_line(line["line_id"])
+            print("線ごとの抽籤情報",draw)
+                
             lines.append({
                 "line_id": line["line_id"],
-                "nickname":"未抽選"
+                "nickname":"未抽籤"
             })
-    else:
+    else:   
         lines = [
             {"line_id":1,"nickname":"Aさん"},
             {"line_id":2,"nickname":"Bさん"}
