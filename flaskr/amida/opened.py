@@ -17,10 +17,20 @@ def opened(amida):
     print("DBから取得したitems",db_items)
 
     # lines = db.get_lines_from_amida(amida_id)
-    lines = [
-        {"line_id":1,"nickname":"Aさん"},
-        {"line_id":2,"nickname":"Bさん"}
-    ]
+
+    lines = []
+
+    if db_lines:
+        for line in db_lines:
+            lines.append({
+                "line_id": line["line_id"],
+                "nickname":"未抽選"
+            })
+    else:
+        lines = [
+            {"line_id":1,"nickname":"Aさん"},
+            {"line_id":2,"nickname":"Bさん"}
+        ]
 
     results = {}
     results["amida_id"] = amida_id
