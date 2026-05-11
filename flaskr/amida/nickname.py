@@ -4,6 +4,7 @@ from flask import (
     )
 
 from . import bp
+from .user_auth import user_auth_required
 
 from .. import db
 from ..utils import amida_id_to_b62, amida_id_b62_to_uuid
@@ -12,6 +13,7 @@ bp = Blueprint("nickname", __name__)
 
 
 @bp.route("/")
+@user_auth_required
 def nickname(amida_id_b62):
     """⑥ニックネーム入力画面制御"""
     try:

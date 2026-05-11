@@ -40,6 +40,7 @@ def main(amida_id_b62):
     return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,  results=results)
 
 @bp.route("/do_draw", methods=("POST",))
+@user_auth_required
 def do_draw(amida_id_b62):
     """あみだくじ抽籤作業制御"""
     try:
@@ -100,6 +101,7 @@ def do_draw(amida_id_b62):
     return redirect(url_for("amida.do_draw_conform", amida_id_b62=amida_id_b62))
 
 @bp.route("/do_open", methods=("POST",))
+@user_auth_required
 def do_open(amida_id_b62):
     """あみだくじ開封作業制御"""
     try:
@@ -134,11 +136,13 @@ def do_open(amida_id_b62):
     return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
 
 @bp.route("/do_draw/conform")
+@user_auth_required
 def do_draw_conform(amida_id_b62):
     """⑦結果確認画面制御"""
     return conform(amida_id_b62, mode="do_draw")
 
 @bp.route("/do_open/conform")
+@user_auth_required
 def do_open_conform(amida_id_b62):
     """⑫開封確認画面制御"""
     return conform(amida_id_b62, mode="do_open")
