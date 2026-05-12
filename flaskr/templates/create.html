@@ -5,8 +5,55 @@
 {% block content %}
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
-	<form method="post">
+	<form method="post" sytle="width: 650px; margin:0 auto;">
 		<!-- フォームはここ -->
+		<div>
+			<label for="title">あみだくじのタイトル</label>
+			<input type="text" id="title" name="title" maxlength="100" required>
+		</div>
+
+		<div>
+			<label for="line_count">線の数</label>
+			<input type="number" id="line_count" name="line_count" min="3" max="20" required>
+		</div>
+
+		<div>
+			<label for="items">アイテム（改行区切り）</label>
+			<textarea id="items" name="items" required></textarea>
+		</div>
+
+		
+		<div class="mb-3">
+			<label class="form-label">オプション1</label>
+			<input type="checkbox" id="option_auto_open" name="option_auto_open">
+			<span>くじが全て選択されたら自動であみだくじを開封する</span>
+		</div>
+
+		<div class="mb-3">
+			<label class="form-label">オプション2</label>
+			<input type="checkbox" id="option_hide_items" name="option_hide_items" checked>
+			<span>下のテキストを隠す(推奨)</span>
+		</div>
+	
+		<div class="mb-3">
+			<label class='form-label'>管理パスワード</label>
+			<input type="password" id="admin_password" name="admin_password" class="form-control" placeholder="********" required>
+		</div>
+
+		<div class="mb-3">
+			<label class='form-label'>管理パスワード確認</label>
+			<input type="password" id="admin_password_confirm" name="admin_password_confirm" class="form-control" placeholder="********" required>
+		</div>
+
+		<div class="mb-3">
+			<label class='form-label' for="user_password">利用パスワード（任意）</label>
+			<input type="password" id="user_password" name="user_password" class="form-control" placeholder="********">
+		</div>		
+		
+		<div class="mb-3">
+			<label class='form-label' for="user_password_confirm">利用パスワード確認</label>
+			<input type="password" id="user_password_confirm" name="user_password_confirm" class="form-control" placeholder="********">
+		</div>
 
 		<!-- これはエラーメッセージの表示（あれば） -->
 		{% for message in get_flashed_messages() %}
@@ -15,6 +62,11 @@
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		{% endfor %}
+
+
+		<button type="submit">作成する</button>
+
+		
 	</form>
 
 
