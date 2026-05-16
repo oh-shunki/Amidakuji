@@ -569,7 +569,7 @@ def get_password_hash_from_draw(draw_id) -> str:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                "SELECT password_hash FROM draws WHERE draw_id = %s",
+                "SELECT password_hash FROM amida_draws WHERE draw_id = %s",
                 (draw_id,)
             )
             result = cursor.fetchone()
