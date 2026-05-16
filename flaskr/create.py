@@ -43,8 +43,7 @@ def create():
 
     return render_template("create.html")
 
-@bp.route("/conform")
-def create_conform():
+@bp.route("/conform/<amida_id_b62>")
+def create_conform(amida_id_b62):
     """③作成確認画面制御"""
-    amida_id_b62 = request.args.get("amida_id_b62")
     return conform(amida_id_b62, mode="create")
