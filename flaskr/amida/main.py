@@ -79,6 +79,8 @@ def do_draw(amida_id_b62):
         error = "ニックネームは必ず入力して下さい"
     elif not 1 <= len(nickname) <= 6:
         error = "ニックネームは6文字以内で入力してください"
+    elif not db.is_nickname_usable(amida_id, nickname):
+        error = "使用済みのニックネームです。他のニックネームを入力して、もう一度試してください。"
     elif not password:
         error = "パスワードは必ず入力して下さい"
     elif not (password.isascii() and 1 <= len(password) <= 20):
