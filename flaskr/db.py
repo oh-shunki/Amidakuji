@@ -89,21 +89,60 @@ def create_amida(amida: dict, items: list) -> uuid.UUID:
         db.rollback()
         return None
 
-def update_amida(amida_id, title, admin_password_hash, user_password_hash,
-                 option_auto_open, option_hide_items) -> bool:
-    """あみだくじを更新
+def update_amida(amida: dict, amida_items: list) -> bool:
+    """あみだくじの設定変更
     Return
         成功：True
         失敗：False
     """
+    amida_id = amida.get("amida_id")
+    title = amida.get("title")
+    option_auto_open = amida.get("option_auto_open", False)
+    option_hide_items = amida.get("option_hide_items", True)
+    admin_password_hash = amida.get("admin_password_hash")
+    user_password_hash = amida.get("user_password_hash", None)
+
+    if not amida_id or get_is_opened_from_amida(amida_id):
+        return False
+
     db = get_db()
     try:
         with db.cursor() as cursor:
-            cursor.execute("UPDATE ...")
+            cursor.execute("""
+                    UPDATE amidas
+                    SET title = %s,
+                        option_auto_open = %s, option_hide_items = %s,
+                        admin_password_hash = %s, user_password_hash = %s
+                    WHERE amida_id = %s
+                    """, (title,
+                          option_auto_open, option_hide_items,
+                          admin_password_hash, user_password_hash,
+                          amida_id
+                          )
+            )
+
+            # 旧アイテム削除
+            cursor.execute(
+                    "DELETE FROM amida_items WHERE amida_id = %s", (amida_id,)
+            )
+
+            # 新アイテム作成
+            for item in amida_items:
+                cursor.execute(
+                        "INSERT INTO amida_items (amida_id, title)"
+                        "VALUES (%s, %s)", (amida_id, item)
+                )
+
+            line_count = get_line_count_from_amida(amida_id)
+            if len(amida_items) < line_count:
+                item = "はずれ"
+                cursor.execute(
+                        "INSERT INTO amida_items (amida_id, title)"
+                        "VALUES (%s, %s)", (amida_id, item)
+                )
 
         db.commit()
-        rows_updated = cursor.rowcount
-        return True if rows_updated > 0 else False
+        return True
 
     except pymysql.Error:
         db.rollback()
