@@ -5,16 +5,16 @@
 {% block content %}
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
-	<form method="post" sytle="width: 650px; margin:0 auto;">
+	<form method="post" style="width: 650px; margin:0 auto;">
 		<!-- フォームはここ -->
-		<div>
-			<label for="title">あみだくじのタイトル</label>
-			<input type="text" id="title" name="title" maxlength="100" required>
+		<div class="mb-3">
+			<label for="title" class="form-label">あみだくじのタイトル</label>
+			<input type="text" id="title" name="title" class="form-control" maxlength="100" required>
 		</div>
 
-		<div>
-			<label class="line_count">線の数</label>
-			<select id="line_count" name="line_count" required>
+		<div class="mb-3">
+			<label for="line_count" class="form-label">線の数</label>
+			<select id="line_count" name="line_count" class="form-select" required>
 				<option value="3">3</option>
 				<option value="4">4</option>
 				<option value="5">5</option>
@@ -36,21 +36,21 @@
 			</select>
 		</div>
 
-		<div>
-			<label class="form-label">アイテム（改行区切り）</label>
-			<textarea id="items" name="items" required></textarea>
+		<div class="mb-3">
+			<label for="items" class="form-label">アイテム（改行区切り）</label>
+			<textarea id="items" name="items" class="form-control" required></textarea>
 		</div>
 
 		
 		<div class="mb-3">
 			<label class="form-label">オプション1</label>
-			<input type="checkbox" id="option_auto_open" name="option_auto_open">
+			<input type="checkbox" id="option_auto_open" name="option_auto_open" class="form-check-input">
 			<span>くじが全て選択されたら自動であみだくじを開封する</span>
 		</div>
 
 		<div class="mb-3">
 			<label class="form-label">オプション2</label>
-			<input type="checkbox" id="option_hide_items" name="option_hide_items" checked>
+			<input type="checkbox" id="option_hide_items" name="option_hide_items" class="form-check-input" checked>
 			<span>下のテキストを隠す(推奨)</span>
 		</div>
 	
@@ -83,7 +83,7 @@
 		{% endfor %}
 
 
-		<button type="submit">作成する</button>
+		<button type="submit" class="btn btn-primary">作成する</button>
 
 		
 	</form>
