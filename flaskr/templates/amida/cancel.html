@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}抽籤取消画面{% endblock %}
+
+{% block content %}
+        <form action="{{ url_for('amida.do_cancel', amida_id_b62=amida_id_b62) }}" method="post">
+                <input type="hidden" name="line_no" value="{{ request.args.get('line_no') }}">
+
+                <div class='mb-3'>
+                        <label class='form-label'>パスワード</label>
+                        <input type="password" name="password" class="form-control" placeholder="********" required>
+                </div>
+
+                {% for message in get_flashed_messages() %}
+                        <div class="alert alert-info alert-dismissible fade show" role="error">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                {% endfor %}
+
+                <div class='d-flex gap-2'>
+                        <button type="submit" class="btn btn-danger">抽籤を取り消す</button>
+                        <a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-secondary">キャンセル</a>
+                </div>
+        </form>
+{% endblock %}
