@@ -47,10 +47,10 @@ def get_and_validate_form(form, mode, current_line_count=None):
 
     if mode == "create":
         if not line_count:
-            errors["line_count"] = "本数を入力してください"
+            errors["line_count"] = "本数を選択してください"
         elif not validate_line_count(line_count):
             line_count = None
-            errors["line_count"] = "本数は3～20 の間で入力してください"
+            errors["line_count"] = "本数は3～20 の間で選択してください"
         else:
             line_count = int(line_count)
     else:
