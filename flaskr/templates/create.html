@@ -5,8 +5,7 @@
 {% block content %}
 	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
-	<form method="post" style="width: 650px; margin:0 auto;">
-		<!-- フォームはここ -->
+	<form method="post" sytle="width: 650px; margin:0 auto;" data-mode="create">
 		<div class="mb-3">
 			<label for="title" class="form-label">あみだくじのタイトル</label>
 			<input type="text" id="title" name="title" class="form-control" maxlength="100" required>
@@ -15,6 +14,7 @@
 		<div class="mb-3">
 			<label for="line_count" class="form-label">線の数</label>
 			<select id="line_count" name="line_count" class="form-select" required>
+				<option value=""></option>
 				<option value="3">3</option>
 				<option value="4">4</option>
 				<option value="5">5</option>
@@ -51,7 +51,7 @@
 		<div class="mb-3">
 			<label class="form-label">オプション2</label>
 			<input type="checkbox" id="option_hide_items" name="option_hide_items" class="form-check-input" checked>
-			<span>下のテキストを隠す(推奨)</span>
+			<span>下のテキストを隠す（推奨）</span>
 		</div>
 	
 		<div class="mb-3">
@@ -74,19 +74,10 @@
 			<input type="password" id="user_password_confirm" name="user_password_confirm" class="form-control" placeholder="********">
 		</div>
 
-		<!-- これはエラーメッセージの表示（あれば） -->
-		{% for message in get_flashed_messages() %}
-			<div class="alert alert-info alert-dismissible fade show" role="error">
-				{{ message }}
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endfor %}
-
-
+        <div id="errorDiv"></div>
 		<button type="submit" class="btn btn-primary">作成する</button>
-
 		
 	</form>
-
+    <script src="{{ url_for("static", filename="amidaForm.js") }}"></script>
 
 {% endblock %}
