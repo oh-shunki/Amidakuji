@@ -98,9 +98,8 @@ def update_amida(amida: dict, amida_items: list) -> bool:
     amida_id = amida.get("amida_id")
     title = amida.get("title")
     option_auto_open = amida.get("option_auto_open", False)
-    option_hide_items = amida.get("option_hide_items", True)
     admin_password_hash = amida.get("admin_password_hash")
-    user_password_hash = amida.get("user_password_hash", None)
+    user_password_hash = amida.get("user_password_hash")
 
     if not amida_id or get_is_opened_from_amida(amida_id):
         return False
@@ -110,16 +109,24 @@ def update_amida(amida: dict, amida_items: list) -> bool:
         with db.cursor() as cursor:
             cursor.execute("""
                     UPDATE amidas
-                    SET title = %s,
-                        option_auto_open = %s, option_hide_items = %s,
-                        admin_password_hash = %s, user_password_hash = %s
+                    SET title = %s, option_auto_open = %s
                     WHERE amida_id = %s
-                    """, (title,
-                          option_auto_open, option_hide_items,
-                          admin_password_hash, user_password_hash,
-                          amida_id
-                          )
+                    """, (title, option_auto_open, amida_id)
             )
+
+            # 管理パスワードある時のみ更新
+            if admin_password_hash:
+                cursor.execute(
+                        "UPDATE amidas SET admin_password_hash = %s"
+                        "WHERE amida_id = %s", (admin_password_hash, amida_id)
+                )
+
+            # 利用パスワードある時のみ更新
+            if user_password_hash:
+                cursor.execute(
+                        "UPDATE amidas SET user_password_hash = %s"
+                        "WHERE amida_id = %s", (user_password_hash, amida_id)
+                )
 
             # 旧アイテム削除
             cursor.execute(
