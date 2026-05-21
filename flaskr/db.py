@@ -569,7 +569,7 @@ def get_password_hash_from_draw(draw_id) -> str:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                "SELECT password_hash FROM draws WHERE draw_id = %s",
+                "SELECT password_hash FROM amida_draws WHERE draw_id = %s",
                 (draw_id,)
             )
             result = cursor.fetchone()
@@ -578,6 +578,26 @@ def get_password_hash_from_draw(draw_id) -> str:
 
             password_hash = result.get("password_hash")
             return password_hash if password_hash else ""
+
+    except pymysql.Error:
+        return None
+
+def is_nickname_usable(amida_id, nickname) -> bool:
+    """ニックネームが使用可能か（重複していないか）を確認
+    Return
+        使用可能（存在しない）: True
+        使用不可（存在する）: False
+        システムエラー: None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT 1 FROM amida_draws WHERE amida_id = %s and nickname = %s",
+                    (amida_id, nickname)
+            )
+            result = cursor.fetchone()
+            return not result or False
 
     except pymysql.Error:
         return None
@@ -619,6 +639,10 @@ def do_draw(amida_id, line_no, nickname, password_hash) -> bool:
 
             # 線の状態チェック
             if line_status != LineStatus.READY:
+                return False
+
+            # ニックネームチェック
+            if not is_nickname_usable(amida_id, nickname):
                 return False
 
             # 抽籤
