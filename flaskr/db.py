@@ -275,6 +275,35 @@ def get_is_opened_from_amida(amida_id) -> bool:
     except pymysql.Error:
         return None
 
+def get_nicknames_from_amida(amida_id) -> list:
+    """あみだくじに参加者のニックネームを一括取得（line_no 順）
+    Return
+        成功：参加者のニックネーム
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute("""
+                    SELECT
+                        d.nickname
+                    FROM
+                        amida_lines l
+                    LEFT JOIN
+                        amida_draws d
+                        ON l.line_id = d.line_id AND l.amida_id = d.amida_id
+                    WHERE
+                        l.amida_id = %s
+                    ORDER BY
+                        l.line_no ASC
+                    """, (amida_id,)
+            )
+            result = cursor.fetchall()
+            return [row["nickname"] for row in result] if result else []
+
+    except pymysql.Error:
+        return None
+
 ## ---- 線操作関数 ----
 class LineStatus(Enum):
     """線の状態クラス"""
