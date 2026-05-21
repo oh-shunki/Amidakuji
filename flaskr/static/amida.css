@@ -1,0 +1,53 @@
+/* あみだくじ画面のスタイルシート */
+
+#amidaDiv {
+    width: 80vw;
+    height: 70vh;
+}
+
+.canvas-container {
+    position: relative;
+    width: 100%;
+    flex: 1;
+}
+
+#amidaCanvas, #routeCanvas, #canvasMsg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#amidaCanvas {
+    z-index: 1;
+}
+
+#routeCanvas {
+    z-index: 2;
+}
+
+#canvasMsg {
+    z-index: 3;
+}
+
+#arrowsDiv, #itemsDiv {
+    width: 100%;
+}
+
+.arrowSpan, .itemSpan {
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+.bg-pink {
+    background-color: pink;
+}
+
+.bg-lightgray {
+    background-color: lightgray;
+}
