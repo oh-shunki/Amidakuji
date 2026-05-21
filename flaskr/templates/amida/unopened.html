@@ -5,23 +5,56 @@
 {% block content %}
     <h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
 
-    {% for nickname in results.amida_lines %}
-        {% if not nickname %}
-            <p>
-                <a href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=loop.index0) }}">
-                        これにする
-                </a>
-            </p>
-        {% else %}
-            <p>{{ nickname }}</p>
-        {% endif %}
-    {% endfor %}
+    <div id="amidaDiv" class="d-flex flex-column bg-light">
 
-    {% if results.option_hide_items %}
-        option_hide_items is on
-    {% else %}
-        option_hide_items is off
-    {% endif %}
+        <div id="arrowsDiv" class="d-flex justify-content-center align-items-center">
+            {% for nickname in results.amida_nicknames %}
+                {% if not nickname %}
+                    <span class="arrowSpan d-flex flex-column align-items-center">
+                        <a class="vertical-text text-decoration-none bg-pink text-black"
+                           href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=loop.index0) }}">コレにする↓</a>
+                    </span>
+                {% else %}
+                    <span class="arrowSpan d-flex flex-column align-items-center">
+                        {# TODO キャンセル機能の実装 #}
+                        <a class="vertical-text text-decoration-none bg-lightgray text-black"
+                           href="{# {{ url_for('amida.cancel.cancel', amida_id_b62=amida_id_b62, line_no=loop.index0) }} #}">取消</a>
+                        <span class="text-nowrap">{{ nickname }}</span>
+                    </span>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div id="canvasContainer" class="canvas-container bg-white shadow rounded">
+            <canvas id="amidaCanvas"></canvas>
+            <canvas id="routeCanvas"></canvas>
+            <h5 id="canvasMsg" class="d-flex justify-content-center align-items-center pe-none">
+                まだ、「くじ」の本体は開封されていません。
+            </h5>
+        </div>
+
+        <div id="itemsDiv" class="d-flex justify-content-center align-items-start">
+            {% for item in results.amida_items %}
+                <span class="itemSpan d-flex flex-column align-items-center">
+                    <span class="bg-white border border-black text-nowrap">
+                        {% if results.option_hide_items %}？{% else %}{{ item.title }}{% endif %}
+                    </span>
+                </span>
+            {% endfor %}
+        </div>
+
+        {% if results.option_hide_items %}
+            <div>
+                <div>？の内訳は・・・？（順不同）</div>
+                <div>
+                    {% for item in results.amida_items %}
+                        <span class="border bg-white border-black">{{ item.title }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
 
     <!-- これはエラーメッセージの表示（あれば） -->
     {% for message in get_flashed_messages() %}

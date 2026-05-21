@@ -7,19 +7,11 @@ def unopened(amida):
     """⑤あみだくじ（未開封）画面制御"""
     amida_id = amida.get("amida_id")
 
-    db_lines = db.get_lines_from_amida(amida_id)
     results = {}
-    results["amida_lines"] = []
-    results["option_hide_items"] = amida.get("option_hide_items")
+    amida_nicknames = db.get_nicknames_from_amida(amida_id) or []
+    amida_items = db.get_items_from_amida(amida_id) or []
 
-    for line in db_lines:
-        status = db.LineStatus(line.get("status"))
-        if status == db.LineStatus.READY:
-            nickname = None
-        else:
-            nickname = db.get_draw_nickname_from_line(line.get("line_id"))
-
-        results["amida_lines"].append(nickname)
-
+    results["amida_nicknames"] = amida_nicknames
+    results["amida_items"] = amida_items
 
     return results
