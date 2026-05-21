@@ -1,3 +1,5 @@
+/* あみだくじフォームの検証制御 */
+
 const amidaForm          = document.querySelector("form");
 const formElements       = document.querySelectorAll("input, select, textarea");
 
