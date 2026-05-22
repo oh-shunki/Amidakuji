@@ -34,9 +34,11 @@ def main(amida_id_b62):
     is_opened = amida.get("is_opened")
     if is_opened:
         results = opened(amida)
+        results["title"] = amida.get("title")
         return render_template("amida/opened.html", amida_id_b62=amida_id_b62, results=results)
 
     results = unopened(amida)
+    results["title"] = amida.get("title")
     return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,  results=results)
 
 @bp.route("/do_draw", methods=("POST",))
