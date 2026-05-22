@@ -501,7 +501,7 @@ def get_title_from_item(item_id) -> str:
         return None
 
 def get_items_from_amida(amida_id) -> list:
-    """あみだくじにアイテムを一括取得
+    """あみだくじにアイテムを一括取得（item_no 順）
     Return
         成功：あみだくじにアイテムの情報
         失敗：None
@@ -510,7 +510,7 @@ def get_items_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM amida_items WHERE amida_id = %s",
+                    "SELECT * FROM amida_items WHERE amida_id = %s ORDER BY item_no ASC",
                     (amida_id,)
             )
             result = cursor.fetchall()
