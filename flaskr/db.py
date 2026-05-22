@@ -462,6 +462,44 @@ def get_item(item_id) -> dict:
     except pymysql.Error:
         return None
 
+def get_item_no_from_item(item_id) -> int:
+    """アイテムの番号を取得
+    Return
+        成功：アイテムの番号
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT item_no FROM amida_items WHERE item_id = %s",
+                    (item_id,)
+            )
+            result = cursor.fetchone()
+            return result["item_no"] if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_title_from_item(item_id) -> str:
+    """アイテムのタイトルを取得
+    Return
+        成功：アイテムのタイトル
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT title FROM amida_items WHERE item_id = %s",
+                    (item_id,)
+            )
+            result = cursor.fetchone()
+            return result["title"] if result else None
+
+    except pymysql.Error:
+        return None
+
 def get_items_from_amida(amida_id) -> list:
     """あみだくじにアイテムを一括取得
     Return
