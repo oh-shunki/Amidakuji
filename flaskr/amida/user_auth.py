@@ -50,12 +50,12 @@ def user_auth(amida_id_b62):
         flash("パスワードが正しくありません")
         return render_template("amida/user_auth.html",
                                amida_id_b62=amida_id_b62,
-                               results=amida)
+                               title=amida.get("title"))
 
     # 認証ページ
     return render_template("amida/user_auth.html",
                            amida_id_b62=amida_id_b62,
-                           results=amida)
+                           title=amida.get("title"))
 
 def user_auth_required(view):
     """ユーザ認証制御関数"""

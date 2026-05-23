@@ -30,7 +30,7 @@ def close_db(e=None):
 
 ## ---- あみだくじ操作関数 ----
 
-def create_amida(amida: dict, items: list) -> uuid.UUID:
+def create_amida(amida: dict, amida_items: list) -> uuid.UUID:
     """あみだくじを作成
     Return
         成功：あみだくじID
@@ -44,6 +44,7 @@ def create_amida(amida: dict, items: list) -> uuid.UUID:
     admin_password_hash = amida.get("admin_password_hash")
     user_password_hash = amida.get("user_password_hash", None)
     is_opened = False
+    amida_map = amida.get("amida_map")
 
     db = get_db()
     try:
@@ -53,34 +54,29 @@ def create_amida(amida: dict, items: list) -> uuid.UUID:
                     INSERT INTO amidas (amida_id, title, line_count,
                         option_auto_open, option_hide_items,
                         admin_password_hash, user_password_hash,
-                        is_opened)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                        is_opened, amida_map)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, (amida_id, title, line_count,
                         option_auto_open, option_hide_items,
                         admin_password_hash, user_password_hash,
-                        is_opened)
+                        is_opened, amida_map)
                     )
 
-            # 線作成
-            for line_no in range(line_count):
+            for n in range(line_count):
+                # 線作成
                 cursor.execute(
                         "INSERT INTO amida_lines (amida_id, line_no) "
-                        "VALUES (%s, %s)", (amida_id, line_no)
+                        "VALUES (%s, %s)", (amida_id, n)
+
                         )
 
-            # アイテム作成
-            for item in items:
+                # アイテム作成
+                item = amida_items[n]
                 cursor.execute(
-                        "INSERT INTO amida_items (amida_id, title) "
-                        "VALUES (%s, %s)", (amida_id, item)
+                        "INSERT INTO amida_items (amida_id, item_no, title) "
+                        "VALUES (%s, %s, %s)", (amida_id, n, item)
                         )
 
-            if len(items) < line_count:
-                item = "はずれ"
-                cursor.execute(
-                        "INSERT INTO amida_items (amida_id, title) "
-                        "VALUES (%s, %s)", (amida_id, item)
-                        )
 
         db.commit()
         return amida_id
@@ -275,6 +271,35 @@ def get_is_opened_from_amida(amida_id) -> bool:
     except pymysql.Error:
         return None
 
+def get_nicknames_from_amida(amida_id) -> list:
+    """あみだくじに参加者のニックネームを一括取得（line_no 順）
+    Return
+        成功：参加者のニックネーム
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute("""
+                    SELECT
+                        d.nickname
+                    FROM
+                        amida_lines l
+                    LEFT JOIN
+                        amida_draws d
+                        ON l.line_id = d.line_id AND l.amida_id = d.amida_id
+                    WHERE
+                        l.amida_id = %s
+                    ORDER BY
+                        l.line_no ASC
+                    """, (amida_id,)
+            )
+            result = cursor.fetchall()
+            return [row["nickname"] for row in result] if result else []
+
+    except pymysql.Error:
+        return None
+
 ## ---- 線操作関数 ----
 class LineStatus(Enum):
     """線の状態クラス"""
@@ -439,8 +464,46 @@ def get_item(item_id) -> dict:
     except pymysql.Error:
         return None
 
+def get_item_no_from_item(item_id) -> int:
+    """アイテムの番号を取得
+    Return
+        成功：アイテムの番号
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT item_no FROM amida_items WHERE item_id = %s",
+                    (item_id,)
+            )
+            result = cursor.fetchone()
+            return result["item_no"] if result else None
+
+    except pymysql.Error:
+        return None
+
+def get_title_from_item(item_id) -> str:
+    """アイテムのタイトルを取得
+    Return
+        成功：アイテムのタイトル
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT title FROM amida_items WHERE item_id = %s",
+                    (item_id,)
+            )
+            result = cursor.fetchone()
+            return result["title"] if result else None
+
+    except pymysql.Error:
+        return None
+
 def get_items_from_amida(amida_id) -> list:
-    """あみだくじにアイテムを一括取得
+    """あみだくじにアイテムを一括取得（item_no 順）
     Return
         成功：あみだくじにアイテムの情報
         失敗：None
@@ -449,7 +512,7 @@ def get_items_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM amida_items WHERE amida_id = %s",
+                    "SELECT * FROM amida_items WHERE amida_id = %s ORDER BY item_no ASC",
                     (amida_id,)
             )
             result = cursor.fetchall()
