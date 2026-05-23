@@ -131,5 +131,8 @@ function toggleFields() {
         userPwdConfInput.disabled = true;
     }
 }
-toggleFields();
-lineCountInput.addEventListener("input", toggleFields);
+
+if (mode == 'create') {
+    toggleFields();
+    lineCountInput.addEventListener("input", toggleFields);
+}
