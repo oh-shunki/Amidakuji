@@ -112,16 +112,18 @@ def update_amida(amida: dict, amida_items: list) -> bool:
 
             # 管理パスワードある時のみ更新
             if admin_password_hash:
-                cursor.execute(
-                        "UPDATE amidas SET admin_password_hash = %s"
-                        "WHERE amida_id = %s", (admin_password_hash, amida_id)
+                cursor.execute("""
+                        UPDATE amidas SET admin_password_hash = %s
+                        WHERE amida_id = %s
+                        """, (admin_password_hash, amida_id)
                 )
 
             # 利用パスワードある時のみ更新
             if user_password_hash:
-                cursor.execute(
-                        "UPDATE amidas SET user_password_hash = %s"
-                        "WHERE amida_id = %s", (user_password_hash, amida_id)
+                cursor.execute("""
+                        UPDATE amidas SET user_password_hash = %s
+                        WHERE amida_id = %s
+                        """, (user_password_hash, amida_id)
                 )
 
             # 旧アイテム削除
@@ -130,18 +132,13 @@ def update_amida(amida: dict, amida_items: list) -> bool:
             )
 
             # 新アイテム作成
-            for item in amida_items:
-                cursor.execute(
-                        "INSERT INTO amida_items (amida_id, title)"
-                        "VALUES (%s, %s)", (amida_id, item)
-                )
-
             line_count = get_line_count_from_amida(amida_id)
-            if len(amida_items) < line_count:
-                item = "はずれ"
-                cursor.execute(
-                        "INSERT INTO amida_items (amida_id, title)"
-                        "VALUES (%s, %s)", (amida_id, item)
+            for n in range(line_count):
+                item = amida_items[n]
+                cursor.execute("""
+                        INSERT INTO amida_items (amida_id, item_no, title)
+                        VALUES (%s, %s, %s)
+                        """, (amida_id, n, item)
                 )
 
         db.commit()
