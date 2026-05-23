@@ -64,21 +64,21 @@ def create_amida(amida: dict, items: list) -> uuid.UUID:
             # 線作成
             for line_no in range(line_count):
                 cursor.execute(
-                        "INSERT INTO amida_lines (amida_id, line_no)"
+                        "INSERT INTO amida_lines (amida_id, line_no) "
                         "VALUES (%s, %s)", (amida_id, line_no)
                         )
 
             # アイテム作成
             for item in items:
                 cursor.execute(
-                        "INSERT INTO amida_items (amida_id, title)"
+                        "INSERT INTO amida_items (amida_id, title) "
                         "VALUES (%s, %s)", (amida_id, item)
                         )
 
             if len(items) < line_count:
                 item = "はずれ"
                 cursor.execute(
-                        "INSERT INTO amida_items (amida_id, title)"
+                        "INSERT INTO amida_items (amida_id, title) "
                         "VALUES (%s, %s)", (amida_id, item)
                         )
 
