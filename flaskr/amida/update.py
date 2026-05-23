@@ -57,6 +57,11 @@ def update(amida_id_b62):
 
         return redirect(url_for("amida.update.update_conform", amida_id_b62=amida_id_b62))
 
+    # テンプレートに渡さない項目を削除
+    amida.pop("admin_password", None)
+    amida.pop("user_password", None)
+    amida.pop("amida_map", None)
+
     # アイテム（当たりのみ）を取得
     amida_items = db.get_items_from_amida(amida_id)
     amida_items = [item for item in amida_items if item["title"]]
