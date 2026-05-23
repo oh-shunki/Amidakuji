@@ -1,5 +1,7 @@
+/* あみだくじフォームの検証制御 */
+
 const amidaForm          = document.querySelector("form");
-const formElements       = document.querySelectorAll("input, textarea");
+const formElements       = document.querySelectorAll("input, select, textarea");
 
 const errorDiv           = document.getElementById("errorDiv");
 
@@ -57,10 +59,7 @@ function validateAll() {
     // 検証：本数（作成モードのみ）
     if (mode === "create") {
         if (!lineCount) {
-            showError("本数を入力してください");
-            return false;
-        } else if (!validateLineCount(lineCount)){
-            showError("本数は3～20 の間で入力してください");
+            showError("本数を選択してください");
             return false;
         }
     }
@@ -132,5 +131,8 @@ function toggleFields() {
         userPwdConfInput.disabled = true;
     }
 }
-toggleFields();
-lineCountInput.addEventListener("input", toggleFields);
+
+if (mode == 'create') {
+    toggleFields();
+    lineCountInput.addEventListener("input", toggleFields);
+}

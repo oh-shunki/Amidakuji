@@ -1,4 +1,6 @@
 """あみだくじ全体制御"""
+import json
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
     flash, redirect, render_template, request, session, url_for, abort
@@ -30,14 +32,24 @@ def main(amida_id_b62):
     if amida is None:
         abort(404)
 
+    amida_map_json = amida.get("amida_map")
+    amida_map = json.loads(amida_map_json)
+
     # 開封状態分岐
     is_opened = amida.get("is_opened")
     if is_opened:
         results = opened(amida)
-        return render_template("amida/opened.html", amida_id_b62=amida_id_b62, results=results)
+        results["title"] = amida.get("title")
+        return render_template("amida/opened.html", amida_id_b62=amida_id_b62,
+                                                    results=results,
+                                                    amida_map=amida_map)
 
     results = unopened(amida)
-    return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,  results=results)
+    results["title"] = amida.get("title")
+    amida_map = [[row[0]] for row in amida_map]
+    return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,
+                                                  results=results,
+                                                  amida_map=amida_map)
 
 @bp.route("/do_draw", methods=("POST",))
 @user_auth_required
