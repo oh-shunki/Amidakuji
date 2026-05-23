@@ -2,6 +2,10 @@
 
 {% block title %}あみだくじ設定変更画面{% endblock %}
 
+{% block extend_head %}
+    <script src="{{ url_for("static", filename="amidaForm.js") }}" defer></script>
+{% endblock %}
+
 {% block content %}
     <h1>あみだくじ設定変更画面</h1>
 
@@ -61,8 +65,6 @@
         <div id="errorDiv"></div>
 
 		<button type="submit" class="btn btn-primary">変更する</button>
+
     </form>
-
-    <script src="{{ url_for('static', filename='amidaForm.js') }}"></script>
-
 {% endblock %}
