@@ -65,16 +65,18 @@ def create_amida(amida: dict, amida_items: list) -> uuid.UUID:
             for n in range(line_count):
                 # 線作成
                 cursor.execute(
-                        "INSERT INTO amida_lines (amida_id, line_no)"
+                        "INSERT INTO amida_lines (amida_id, line_no) "
                         "VALUES (%s, %s)", (amida_id, n)
+
                         )
 
                 # アイテム作成
                 item = amida_items[n]
                 cursor.execute(
-                        "INSERT INTO amida_items (amida_id, item_no, title)"
+                        "INSERT INTO amida_items (amida_id, item_no, title) "
                         "VALUES (%s, %s, %s)", (amida_id, n, item)
                         )
+
 
         db.commit()
         return amida_id
