@@ -55,7 +55,7 @@ def update(amida_id_b62):
         if not success:
             abort(500, description="設定変更するとき、不明なエラーが出ました。")
 
-        return redirect(url_for("update.update_conform", amida_id_b62=amida_id_b62))
+        return redirect(url_for("amida.update.update_conform", amida_id_b62=amida_id_b62))
 
     amida_items = db.get_items_from_amida(amida_id)
 
