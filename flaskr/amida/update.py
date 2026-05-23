@@ -1,3 +1,5 @@
+import random
+
 from werkzeug.security import generate_password_hash
 from flask import Blueprint, redirect, render_template, request, url_for, abort
 
@@ -49,6 +51,14 @@ def update(amida_id_b62):
             amida["user_password_hash"] = None
 
         amida["amida_id"] = amida_id_b62_to_uuid(amida_id_b62)
+
+        # アイテムを足して、ランダムに並び替える
+        line_count = db.get_line_count_from_amida(amida_id)
+        shortage = line_count - len(amida_items)
+        if shortage > 0:
+            amida_items.extend([""] * shortage)
+
+        random.shuffle(amida_items)
 
         success = db.update_amida(amida, amida_items)
 
