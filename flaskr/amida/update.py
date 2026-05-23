@@ -57,7 +57,10 @@ def update(amida_id_b62):
 
         return redirect(url_for("amida.update.update_conform", amida_id_b62=amida_id_b62))
 
+    # アイテム（当たりのみ）を取得
     amida_items = db.get_items_from_amida(amida_id)
+    amida_items = [item for item in amida_items if item["title"]]
+    print(amida_items)
 
     return render_template("amida/update.html", amida=amida, amida_items=amida_items)
 
