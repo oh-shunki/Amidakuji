@@ -1,7 +1,9 @@
 import random
 
-from werkzeug.security import generate_password_hash
-from flask import Blueprint, redirect, render_template, request, url_for, abort
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import (
+    Blueprint, flash, redirect, render_template, request, url_for, abort
+    )
 
 from .user_auth import user_auth_required
 from .amida_form import get_and_validate_form
@@ -27,6 +29,20 @@ def update(amida_id_b62):
     # このIDは存在していない
     if amida is None:
         abort(404)
+
+    # TODO. 管理パスワード認証
+    """
+    errors = {}
+    admin_password = request.form.get("admin_password", "")
+    admin_password_hash = amida.get("admin_password_hash")
+
+    if not check_password_hash(admin_password_hash, admin_password):
+        errors["no_admin_password"] = "正しい管理パスワードを入力してください"
+
+        return render_template("amida/update.html", errors=errors,
+                                                    amida=amida,
+                                                    amida_items=amida_items)
+    """
 
     if request.method == "POST":
         errors, amida, amida_items = get_and_validate_form(request.form, mode="update")
