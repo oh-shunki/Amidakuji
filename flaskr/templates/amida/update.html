@@ -5,6 +5,64 @@
 {% block content %}
     <h1>あみだくじ設定変更画面</h1>
 
-    <p>この画面は、あみだくじ設定変更機能の画面です。</p>
-    <p>現在は画面作成のみで、設定変更処理はまだ実装していません。</p>
+    <form method="post" style="width: 650px; margin:0 auto;" data-mode="update">
+		<div class="mb-3">
+			<label for="title" class="form-label">あみだくじのタイトル</label>
+			<input type="text" id="title" name="title" class="form-control" maxlength="100" required>
+		</div>
+
+        <div class="mb-3">
+			<label for="line_count" class="form-label">線の数（変更不可）</label>
+			<select id="line_count" name="line_count" class="form-select" disabled>
+                <option value="3" selected>3</option>
+            </select>
+		
+        </div>
+
+        <div class="mb-3">
+			<label for="items" class="form-label">アイテム（改行区切り）</label>
+			<textarea id="items" name="items" class="form-control" required></textarea>
+		</div>
+
+		<div class="mb-3">
+			<input type="checkbox" id="option_auto_open" name="option_auto_open" class="form-check-input">
+			<label for="option_auto_open" class="form-check-label">すべて抽籤されたら自動で開封される</label>
+		</div>
+
+		<div class="mb-3">
+			<input type="checkbox" id="option_hide_items" name="option_hide_items" class="form-check-input" disabled>
+			<label for="option_hide_items" class="form-check-label">未開封時にアイテムの配置を隠す（変更不可）</label>
+		</div>
+        
+        <div class="mb-3">
+			<label class='form-label'>管理パスワード(変更する場合のみ入力してください)</label>
+			<input type="password" id="admin_password" name="admin_password" class="form-control" placeholder="********">
+		</div>
+
+
+        <div class="mb-3">
+			<label class='form-label'>管理パスワード確認(変更する場合のみ入力してください)</label>
+			<input type="password" id="admin_password_confirm" name="admin_password_confirm" class="form-control" placeholder="********" >
+		</div>
+
+        <div class="mb-3">
+			<label class='form-label' for="user_password">利用パスワード(変更する場合のみ入力してください)</label>
+			<input type="password" id="user_password" name="user_password" class="form-control" placeholder="********">
+		</div>		
+		
+		<div class="mb-3">
+			<label class='form-label' for="user_password_confirm">利用パスワード確認(変更する場合のみ入力してください)</label>
+			<input type="password" id="user_password_confirm" name="user_password_confirm" class="form-control" placeholder="********">
+		</div>
+
+		<p id="error_message" class="text-danger"></p>
+
+
+        <div id="errorDiv"></div>
+
+		<button type="submit" class="btn btn-primary">変更する</button>
+    </form>
+
+    <script src="{{ url_for('static', filename='amidaForm.js') }}"></script>
+
 {% endblock %}
