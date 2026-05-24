@@ -1,5 +1,6 @@
 """あみだくじ全体制御"""
 import json
+import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
@@ -16,10 +17,10 @@ from ..conform import conform
 @bp.route("/")
 @user_auth_required
 def main(amida_id_b62):
-    """あみだくじ全体画面制御"""
-    from .opened import opened
-    from .unopened import unopened
-
+    """あみだくじ画面制御
+        ⑤あみだくじ画面（未開封）
+        ⑨あみだくじ画面（開封済）
+    """
     try:
         amida_id = amida_id_b62_to_uuid(amida_id_b62)
     except ValueError:
@@ -32,24 +33,35 @@ def main(amida_id_b62):
     if amida is None:
         abort(404)
 
-    amida_map_json = amida.get("amida_map")
+    amida.pop("admin_password_hash", None)
+    amida.pop("user_password_hash", None)
+
+    amida["amida_lines_status"] = db.get_lines_status_str_from_amida(amida_id) or []
+    amida["amida_nicknames"] = db.get_nicknames_from_amida(amida_id) or []
+    amida["amida_items"] = db.get_items_from_amida(amida_id) or []
+
+    amida_map_json = amida.pop("amida_map", None)
     amida_map = json.loads(amida_map_json)
 
-    # 開封状態分岐
-    is_opened = amida.get("is_opened")
-    if is_opened:
-        results = opened(amida)
-        results["title"] = amida.get("title")
-        return render_template("amida/opened.html", amida_id_b62=amida_id_b62,
-                                                    results=results,
-                                                    amida_map=amida_map)
+    # 開封済
+    if amida.get("is_opened"):
+        amida["amida_map"] = amida_map
 
-    results = unopened(amida)
-    results["title"] = amida.get("title")
-    amida_map = [[row[0]] for row in amida_map]
+        return render_template("amida/opened.html", amida_id_b62=amida_id_b62,
+                                                    amida=amida)
+
+    # 未開封
+    option_hide_items = amida.get("option_hide_items")
+
+    # option_hide_items オンの場合はアイテムをランダムに並び替える
+    if option_hide_items:
+        random.shuffle(amida["amida_items"])
+
+    # あみだくじマップを本数だけにする
+    amida["amida_map"] = [[[0]] for _ in amida_map]
+
     return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,
-                                                  results=results,
-                                                  amida_map=amida_map)
+                                                  amida=amida)
 
 @bp.route("/do_draw", methods=("POST",))
 @user_auth_required
