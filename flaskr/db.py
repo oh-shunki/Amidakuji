@@ -314,6 +314,33 @@ def get_is_opened_from_amida(amida_id) -> bool:
     except pymysql.Error:
         return None
 
+def get_lines_status_str_from_amida(amida_id) -> list[str]:
+    """あみだくじに線の状態を一括取得（line_no 順）
+    Return
+        成功：線の状態リスト
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute("""
+                    SELECT status FROM amida_lines WHERE amida_id = %s
+                    ORDER BY line_no ASC
+                    """, (amida_id,)
+            )
+            results = cursor.fetchall()
+            lines_status = []
+            if results:
+                for row in results:
+                    lines_status.append(row["status"])
+
+                return lines_status
+
+            return None
+
+    except pymysql.Error:
+        return None
+
 def get_nicknames_from_amida(amida_id) -> list:
     """あみだくじに参加者のニックネームを一括取得（line_no 順）
     Return
