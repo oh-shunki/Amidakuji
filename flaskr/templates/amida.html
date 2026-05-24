@@ -4,18 +4,14 @@
 
 {% block extend_head %}
     <link rel="stylesheet" href="{{ url_for("static", filename="amida.css") }}">
-    {% if amida_map %}
-        <script>
-                const amidaMap = {{ amida_map | tojson }};
-        </script>
-        <script src="{{ url_for("static", filename="amidaCanvas.js") }}" defer></script>
-    {% endif %}
+    <script>
+            const amidaMap = {{ amida.amida_map | tojson }};
+    </script>
+    <script src="{{ url_for("static", filename="amidaCanvas.js") }}" defer></script>
 {% endblock %}
 
 {% block header %}
-	<h1>{% block subtitle %}{{ results.title }}{% endblock %}</h1>
+	<h1>{% block subtitle %}{{ amida.title }}{% endblock %}</h1>
 {% endblock %}
 
-{% block content %}
-	<h1>🏗️🏗️🏗️🏗️🏗️工事中🏗️🏗️🏗️🏗️🏗️</h1>
-{% endblock %}
+{% block content %}{% endblock %}

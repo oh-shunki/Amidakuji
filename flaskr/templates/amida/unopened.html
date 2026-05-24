@@ -6,18 +6,18 @@
     <div id="amidaDiv" class="p-3 d-flex flex-column bg-light shadow">
 
         <div id="arrowsDiv" class="d-flex justify-content-center align-items-center">
-            {% for nickname in results.amida_nicknames %}
-                {% if not nickname %}
+            {% for line_no in range(amida.line_count) %}
+                {% if amida.amida_lines_status[line_no] == "ready" %}
                     <span class="arrowSpan p-1 d-flex flex-column align-items-center">
-                        <a class="vertical-text text-decoration-none bg-pink text-black"
-                           href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=loop.index0) }}">コレにする↓</a>
+                        <a class="p-1 vertical-text text-decoration-none bg-pink text-black"
+                           href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=line_no ) }}">コレにする↓</a>
                     </span>
-                {% else %}
+                {% elif amida.amida_lines_status[line_no] == "drawn" %}
                     <span class="arrowSpan d-flex flex-column align-items-center">
                         {# TODO キャンセル機能の実装 #}
                         <a class="p-1 vertical-text text-decoration-none bg-lightgray text-black"
-                           href="{# {{ url_for('amida.cancel.cancel', amida_id_b62=amida_id_b62, line_no=loop.index0) }} #}">取消</a>
-                        <span class="text-nowrap">{{ nickname }}</span>
+                           href="{# {{ url_for('amida.cancel.cancel', amida_id_b62=amida_id_b62, line_no=line_no) }} #}">取消</a>
+                        <span class="text-nowrap">{{ amida.amida_nicknames[line_no] }}</span>
                     </span>
                 {% endif %}
             {% endfor %}
@@ -32,9 +32,9 @@
         </div>
 
         <div id="itemsDiv" class="d-flex justify-content-center align-items-start">
-            {% for item in results.amida_items %}
+            {% for item in amida.amida_items %}
                 <span class="itemSpan d-flex flex-column align-items-center">
-                    {% if results.option_hide_items %}
+                    {% if amida.option_hide_items %}
                         <span class="p-1 bg-white border border-black text-nowrap">？</span>
                     {% elif item.title %}
                         <span class="p-1 bg-white border border-black text-nowrap">{{ item.title }}</span>
@@ -43,13 +43,13 @@
             {% endfor %}
         </div>
 
-        {% if results.option_hide_items %}
+        {% if amida.option_hide_items %}
             <div class="p-1 text-center">
                 <div class="d-flex justify-content-center align-items-center">
                     <span class="p-1 bg-white border border-black text-nowrap">？</span>の内訳は・・・？（順不同）
                 </div>
                 <div class="d-flex justify-content-center">
-                    {% for item in results.amida_items %}
+                    {% for item in amida.amida_items %}
                         {% if item.title %}
                             <span class="p-1 m-1 bg-white border border-black text-nowrap">{{ item.title }}</span>
                         {% endif %}
