@@ -11,9 +11,13 @@ const DELAY = 2000; // 循環表示待機時間
 
 const EMPTY = 0, RIGHT = 1, LEFT = -1;
 
+let stopLoop = false;
+
 const canvasContainer = document.getElementById('canvasContainer');
 const arrowsDiv = document.getElementById('arrowsDiv');
 const itemsDiv = document.getElementById('itemsDiv');
+
+const arrowBtns = document.querySelectorAll(".arrowBtn");
 
 const amidaCanvas = document.getElementById('amidaCanvas');
 const routeCanvas = document.getElementById('routeCanvas');
@@ -62,7 +66,8 @@ function drawLine(ctx, x1, y1, x2, y2) {
 
 // マップ表示
 function showMap() {
-    amidaCtx.clearRect(0, 0, canvasW, canvasH);
+    clearRoute();
+
     amidaCtx.strokeStyle = MAP_COLOR;
     amidaCtx.lineWidth = MAP_LINE_WIDTH;
 
@@ -91,6 +96,10 @@ function showRoute(lineNo) {
     routeCtx.strokeStyle = ROUTE_COLOR;
     routeCtx.lineWidth = ROUTE_LINE_WIDTH;
     
+    clearRoute();
+
+    arrowBtns[lineNo].style.color = "red";
+
     let currentX = lineNo;
     for (let y = 0; y < mapY; y++) {
         drawLine(routeCtx, currentX, y, currentX, y + 1);
@@ -106,16 +115,38 @@ function showRoute(lineNo) {
     }
 }
 
+// ルートを消す
+function clearRoute() {
+    arrowBtns.forEach((btn) => { btn.style.color = "black"; });
+    routeCtx.clearRect(0, 0, canvasW, canvasH);
+}
+
+// ルート表示を停止する
+function hideRoute() {
+    stopLoop = true;
+    clearRoute();
+}
+
 // ルートの表示ループ
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 async function showRouteLoop() {
-    while(true) {
+    stopLoop = false;
+
+    while(!stopLoop) {
         for (let line = 0; line < mapX; line++) {
-            routeCtx.clearRect(0, 0, canvasW, canvasH);
+            clearRoute();
+            if (stopLoop) break;
+
             showRoute(line);
             await sleep(DELAY);
         }
     }
+}
+
+// ルート表示ループを停止する
+function stopShowRouteLoop() {
+    stopLoop = true;
+    clearRoute();
 }
 
 // 画面サイズが変更される時の再初期化登録
