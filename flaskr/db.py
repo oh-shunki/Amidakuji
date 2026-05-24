@@ -279,7 +279,7 @@ def get_is_opened_from_amida(amida_id) -> bool:
 class LineStatus(Enum):
     """線の状態クラス"""
     READY = "ready"
-    DRAWEN = "drawn"
+    DRAWN = "drawn"
     CANCELED = "canceled"
 
 def get_lines_from_amida(amida_id) -> list:
@@ -655,6 +655,62 @@ def do_draw(amida_id, line_no, nickname, password_hash) -> bool:
             cursor.execute(
                     "UPDATE amida_lines SET status = 'drawn'"
                     "WHERE line_id = %s", (line_id,)
+            )
+
+        db.commit()
+        return True
+
+    except pymysql.Error:
+        db.rollback()
+        return False
+
+## ---- 抽籤取消関数 ----
+
+def do_cancel(amida_id, line_no) -> bool:
+    """抽籤取消をする
+    Return
+        成功：True
+        失敗：False
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            # 開封状態チェック
+            cursor.execute(
+                    "SELECT is_opened FROM amidas WHERE amida_id = %s FOR UPDATE",
+                    (amida_id,)
+            )
+            result = cursor.fetchone()
+            if not result or result.get("is_opened"):
+                return False
+
+            # 線の情報を取得
+            cursor.execute("""
+                    SELECT line_id, status FROM amida_lines
+                    WHERE amida_id = %s AND line_no = %s
+                    """, (amida_id, line_no)
+            )
+            result = cursor.fetchone()
+            if not result:
+                return False
+
+            line_id = result.get("line_id")
+            line_status = LineStatus(result.get("status"))
+
+            # 線の状態チェック
+            if line_status != LineStatus.DRAWN:
+                return False
+
+            # 参加者情報を削除
+            cursor.execute(
+                    "DELETE FROM amida_draws WHERE amida_id = %s AND line_id = %s",
+                    (amida_id, line_id)
+            )
+
+            # 線の状態を更新
+            cursor.execute(
+                    "UPDATE amida_lines SET status = 'canceled' WHERE line_id = %s",
+                    (line_id,)
             )
 
         db.commit()
