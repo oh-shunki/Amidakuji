@@ -39,6 +39,12 @@
     white-space: nowrap;
 }
 
+.arrowBtn {
+    background: none;
+    border: none;
+    margin-bottom: -15%;
+}
+
 .vertical-text {
   writing-mode: vertical-rl;
   text-orientation: upright;
