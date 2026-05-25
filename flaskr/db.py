@@ -157,7 +157,17 @@ def delete_amida(amida_id):
     db = get_db()
     try:
         with db.cursor() as cursor:
-            cursor.execute("...")
+            cursor.execute(
+                    "SELECT 1 FROM amidas WHERE amida_id = %s FOR UPDATE",
+                    (amida_id,)
+            )
+            result = cursor.fetchone()
+            if not result:
+                return False
+
+            cursor.execute(
+                    "DELETE FROM amidas WHERE amida_id = %s", (amida_id,)
+            )
 
         db.commit()
         return True
