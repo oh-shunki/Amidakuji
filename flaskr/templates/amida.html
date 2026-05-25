@@ -3,7 +3,6 @@
 {% block title %}{% endblock %}
 
 {% block extend_head %}
-    <link rel="stylesheet" href="{{ url_for("static", filename="amida.css") }}">
     <script>
             const amidaMap = {{ amida.amida_map | tojson }};
     </script>
