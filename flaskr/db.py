@@ -759,7 +759,7 @@ def is_nickname_usable(amida_id, nickname) -> bool:
                     (amida_id, nickname)
             )
             result = cursor.fetchone()
-            return not result or False
+            return result is None
 
     except pymysql.Error:
         return None
