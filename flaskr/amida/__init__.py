@@ -14,6 +14,6 @@ bp.register_blueprint(nickname.bp, url_prefix="/nickname")
 from . import update
 bp.register_blueprint(update.bp, url_prefix="/update")
 
-#from . import cancel
-#bp.register_blueprint(cancel.bp, url_prefix="/cancel")
+from . import cancel
+bp.register_blueprint(cancel.bp, url_prefix="/cancel")
 
