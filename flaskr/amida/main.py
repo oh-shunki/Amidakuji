@@ -166,6 +166,41 @@ def do_open(amida_id_b62):
 
     return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
 
+@bp.route("/delete", methods=("POST",))
+@user_auth_required
+def delete_amida(amida_id_b62):
+    """あみだくじ削除作業制御"""
+    try:
+        amida_id = amida_id_b62_to_uuid(amida_id_b62)
+    except ValueError:
+        # このIDのはBase62型ではない
+        abort(404)
+
+    amida = db.get_amida(amida_id)
+
+    # このIDは存在していない
+    if amida is None:
+        abort(404)
+
+    # 認証
+    admin_password = request.form.get("admin_password")
+    admin_password_hash = db.get_admin_password_hash_from_amida(amida_id)
+
+    if check_password_hash(admin_password_hash, admin_password):
+        # 認証成功、削除する
+
+        if not db.delete_amida(amida_id):
+            abort(500, description="削除するとき、不明なエラーが出ました。")
+
+        return redirect(url_for("index.delete_conform", amida_id_b62=amida_id_b62))
+
+    # 認証エラー
+    flash("正しい管理パスワードを入力してください")
+
+    session[f"{amida_id_b62}_admin_auth_once"] = True
+
+    return redirect(url_for("amida.update.update", amida_id_b62=amida_id_b62))
+
 @bp.route("/do_draw/conform")
 @user_auth_required
 def do_draw_conform(amida_id_b62):
