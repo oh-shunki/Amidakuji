@@ -1,5 +1,10 @@
 /* あみだくじ画面のスタイルシート */
 
+.copyleft {
+  display:inline-block;
+  transform: rotate(180deg);
+}
+
 #amidaDiv {
     width: 80vw;
     height: 70vh;
