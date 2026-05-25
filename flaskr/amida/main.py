@@ -8,6 +8,7 @@ from flask import (
     )
 
 from . import bp
+from .amida_map import get_goals
 from .user_auth import user_auth_required
 
 from .. import db
@@ -141,23 +142,28 @@ def do_open(amida_id_b62):
     if amida is None:
         abort(404)
 
-    # すでに開封済み
-    is_opened = amida.get("is_opened")
-    if is_opened:
-        abort(409)
+    # 開封済みの場合はエラー
+    if amida.get("is_opened"):
+        abort(403, description="このあみだくじはすでに開封済みです。")
 
     # 認証
     admin_password = request.form.get("admin_password")
     admin_password_hash = db.get_admin_password_hash_from_amida(amida_id)
 
     if check_password_hash(admin_password_hash, admin_password):
-        # 認証成功
+        # 認証成功、開封する
 
-        # 開封処理はここ
-        return redirect(url_for("amida.do_open.conform", amida_id_b62=amida_id_b62))
+        amida_map = amida.get("amida_map")
+        goals = get_goals(amida_map)
+
+        if not db.do_open(amida_id, goals):
+            abort(500, description="開封するとき、不明なエラーが出ました。")
+
+        return redirect(url_for("amida.do_open_conform", amida_id_b62=amida_id_b62))
 
     # 認証エラー
     flash("正しい管理パスワードを入力してください")
+
     return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
 
 @bp.route("/do_draw/conform")

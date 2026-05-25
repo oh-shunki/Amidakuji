@@ -798,7 +798,7 @@ def do_draw(amida_id, line_no, nickname, password_hash) -> bool:
         return False
 
 ## ---- 開封関数 ----
-def do_open(amida_id) -> bool:
+def do_open(amida_id, goals) -> bool:
     """あみだくじを開封する
     Return
         成功：True
@@ -807,12 +807,50 @@ def do_open(amida_id) -> bool:
     db = get_db()
     try:
         with db.cursor() as cursor:
-            cursor.execute("SELECT ...")
+            cursor.execute(
+                    "SELECT is_opened FROM amidas WHERE amida_id = %s FOR UPDATE",
+                     (amida_id,)
+            )
             result = cursor.fetchone()
+            if not result or result["is_opened"]:
+                return False
 
-            cursor.execute("INSERT ...")
-            # UPDATE amida.is_opened = True
+            # アイテムID一括取得（item_no 順）
+            cursor.execute("""
+                    SELECT item_id FROM amida_items WHERE amida_id = %s
+                    ORDER BY item_no ASC
+                    """, (amida_id,)
+            )
+            result = cursor.fetchall()
+            item_ids = [row["item_id"] for row in result]
+
+            # 線ID一括取得（line_no 順）
+            cursor.execute("""
+                    SELECT line_id FROM amida_lines WHERE amida_id = %s
+                    ORDER BY line_no ASC
+                    """, (amida_id,)
+            )
+            result = cursor.fetchall()
+            line_ids = [row["line_id"] for row in result]
+
+            # amida_lines にゴールを記入
+            for line_no, item_no in enumerate(goals):
+                item_id = item_ids[item_no]
+                line_id = line_ids[line_no]
+
+                cursor.execute(
+                        "UPDATE amida_lines SET item_id = %s WHERE line_id = %s",
+                        (item_id, line_id)
+                )
+
+            # 開封状態を切り替える
+            cursor.execute(
+                    "UPDATE amidas SET is_opened = True WHERE amida_id = %s",
+                    (amida_id,)
+            )
+
         db.commit()
+        return True
 
     except pymysql.Error:
         db.rollback()
