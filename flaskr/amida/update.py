@@ -3,7 +3,7 @@ import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, abort
+    Blueprint, flash, redirect, render_template, request, session, url_for, abort
     )
 
 from .user_auth import user_auth_required
@@ -35,19 +35,17 @@ def update(amida_id_b62):
     if amida.get("is_opened"):
         abort(403, description="開封済みのあみだくじは設定を変更できません。")
 
-    # TODO. 管理パスワード認証
-    """
-    errors = {}
+    # 認証
     admin_password = request.form.get("admin_password", "")
     admin_password_hash = amida.get("admin_password_hash")
 
-    if not check_password_hash(admin_password_hash, admin_password):
-        errors["no_admin_password"] = "正しい管理パスワードを入力してください"
+    # 削除から飛ばせる場合でも一回許可する
+    allowed_once = session.pop(f"{amida_id_b62}_admin_auth_once", None)
 
-        return render_template("amida/update.html", errors=errors,
-                                                    amida=amida,
-                                                    amida_items=amida_items)
-    """
+    if not (allowed_once or check_password_hash(admin_password_hash, admin_password)):
+        flash("正しい管理パスワードを入力してください")
+
+        return redirect(url_for("amida.amida", amida_id_b62=amida_id_b62))
 
     # テンプレートに渡さない項目を削除
     amida.pop("admin_password", None)
