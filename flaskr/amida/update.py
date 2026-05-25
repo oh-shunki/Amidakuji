@@ -31,6 +31,10 @@ def update(amida_id_b62):
     if amida is None:
         abort(404)
 
+    # 開封済みの場合はエラー
+    if amida.get("is_opened"):
+        abort(403, description="開封済みのあみだくじは設定を変更できません。")
+
     # TODO. 管理パスワード認証
     """
     errors = {}
