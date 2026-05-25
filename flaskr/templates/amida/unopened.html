@@ -9,19 +9,19 @@
             {% for line_no in range(amida.line_count) %}
                 {% if amida.amida_lines_status[line_no] == "ready" %}
                     <span class="arrowSpan p-1 d-flex flex-column align-items-center">
-                        <a class="p-1 vertical-text text-decoration-none bg-pink text-black"
+                        <a class="p-1 bg-pink text-black vertical-text text-decoration-none user-select-all"
                            href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=line_no ) }}">コレにする↓</a>
                     </span>
                 {% elif amida.amida_lines_status[line_no] == "drawn" %}
                     <span class="arrowSpan d-flex flex-column align-items-center">
                         {# TODO キャンセル機能の実装 #}
-                        <a class="p-1 vertical-text text-decoration-none bg-lightgray text-black"
+                        <a class="p-1 bg-lightgray text-black vertical-text text-decoration-none user-select-all"
                            href="{# {{ url_for('amida.cancel.cancel', amida_id_b62=amida_id_b62, line_no=line_no) }} #}">取消</a>
-                        <span class="text-nowrap">{{ amida.amida_nicknames[line_no] }}</span>
+                        <span class="text-nowrap user-select-all">{{ amida.amida_nicknames[line_no] }}</span>
                     </span>
                 {% else %}
                     <span class="arrowSpan d-flex flex-column align-items-center">
-                        <span class="p-1 vertical-text text-decoration-none bg-dark text-light">取消済</span>
+                        <span class="p-1 bg-dark text-light vertical-text user-select-all">取消済</span>
                     </span>
                 {% endif %}
             {% endfor %}
@@ -39,9 +39,9 @@
             {% for item in amida.amida_items %}
                 <span class="itemSpan d-flex flex-column align-items-center">
                     {% if amida.option_hide_items %}
-                        <span class="p-1 bg-white border border-black text-nowrap">？</span>
+                        <span class="p-1 bg-white border border-black text-nowrap user-select-none">？</span>
                     {% elif item.title %}
-                        <span class="p-1 bg-white text-nowrap">{{ item.title }}</span>
+                        <span class="p-1 bg-white text-nowrap user-select-all">{{ item.title }}</span>
                     {% endif %}
                 </span>
             {% endfor %}
@@ -49,13 +49,13 @@
 
         {% if amida.option_hide_items %}
             <div class="p-1 text-center">
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center user-select-all">
                     <span class="p-1 bg-white border border-black text-nowrap">？</span>の内訳は・・・？（順不同）
                 </div>
                 <div class="d-flex justify-content-center">
                     {% for item in amida.amida_items %}
                         {% if item.title %}
-                            <span class="p-1 m-1 bg-white border border-black text-nowrap">{{ item.title }}</span>
+                            <span class="p-1 m-1 bg-white border border-black text-nowrap user-select-all">{{ item.title }}</span>
                         {% endif %}
                     {% endfor %}
                 </div>
