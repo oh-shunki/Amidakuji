@@ -96,13 +96,20 @@ def do_update(amida_id_b62):
 
     amida["amida_id"] = amida_id_b62_to_uuid(amida_id_b62)
 
-    # アイテムを足して、ランダムに並び替える
-    line_count = db.get_line_count_from_amida(amida_id)
-    shortage = line_count - len(amida_items)
-    if shortage > 0:
-        amida_items.extend([""] * shortage)
+    db_items = db.get_items_from_amida(amida_id)
+    db_items_title = [item["title"] for item in db_items if item.get("title")]
 
-    random.shuffle(amida_items)
+    if amida_items == db_items_title:
+        amida_items = None
+
+    else:
+        # アイテムを足して、ランダムに並び替える
+        line_count = db.get_line_count_from_amida(amida_id)
+        shortage = line_count - len(amida_items)
+        if shortage > 0:
+            amida_items.extend([""] * shortage)
+
+        random.shuffle(amida_items)
 
     success = db.update_amida(amida, amida_items)
 

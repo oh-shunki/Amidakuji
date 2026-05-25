@@ -126,20 +126,22 @@ def update_amida(amida: dict, amida_items: list) -> bool:
                         """, (user_password_hash, amida_id)
                 )
 
-            # 旧アイテム削除
-            cursor.execute(
-                    "DELETE FROM amida_items WHERE amida_id = %s", (amida_id,)
-            )
-
-            # 新アイテム作成
-            line_count = get_line_count_from_amida(amida_id)
-            for n in range(line_count):
-                item = amida_items[n]
-                cursor.execute("""
-                        INSERT INTO amida_items (amida_id, item_no, title)
-                        VALUES (%s, %s, %s)
-                        """, (amida_id, n, item)
+            # アイテムが変更された時のみ再作成
+            if amida_items:
+                # 旧アイテム削除
+                cursor.execute(
+                        "DELETE FROM amida_items WHERE amida_id = %s", (amida_id,)
                 )
+
+                # 新アイテム作成
+                line_count = get_line_count_from_amida(amida_id)
+                for n in range(line_count):
+                    item = amida_items[n]
+                    cursor.execute("""
+                            INSERT INTO amida_items (amida_id, item_no, title)
+                            VALUES (%s, %s, %s)
+                            """, (amida_id, n, item)
+                    )
 
         db.commit()
         return True
