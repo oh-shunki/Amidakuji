@@ -321,6 +321,25 @@ def get_line(line_id) -> dict:
     except pymysql.Error:
         return None
 
+def get_line_by_no_from_amida(amida_id, line_no):
+    """あみだくじに線の番号から情報を取得
+    Return
+        成功：線の情報
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute(
+                    "SELECT * FROM amida_lines WHERE amida_id = %s and line_no = %s",
+                    (amida_id, line_no)
+            )
+            result = cursor.fetchone()
+            return result or None
+
+    except pymysql.Error:
+        return None
+
 def get_line_no_from_line(line_id) -> int:
     """線に線の番号を取得
     Return
