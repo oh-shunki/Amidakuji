@@ -400,7 +400,7 @@ def get_nicknames_from_amida(amida_id) -> list:
 # ----- 線 amida_lines 情報取得関数 ------
 
 def get_lines_from_amida(amida_id) -> list:
-    """あみだくじに線を一括取得
+    """あみだくじに線を一括取得（line_no 順）
     Return
         成功：あみだくじに線の情報
         失敗：None
@@ -516,7 +516,7 @@ def get_line_status_from_line(line_id) -> LineStatus:
 # ----- アイテム amida_items 情報取得関数 -----
 
 def get_items_from_amida(amida_id) -> list:
-    """あみだくじにアイテムを一括取得
+    """あみだくじにアイテムを一括取得（item_no 順）
     Return
         成功：あみだくじにアイテムの情報
         失敗：None
@@ -525,7 +525,7 @@ def get_items_from_amida(amida_id) -> list:
     try:
         with db.cursor() as cursor:
             cursor.execute(
-                    "SELECT * FROM amida_items WHERE amida_id = %s ORDER BY line_no ASC",
+                    "SELECT * FROM amida_items WHERE amida_id = %s ORDER BY item_no ASC",
                     (amida_id,)
             )
             results = cursor.fetchall()
