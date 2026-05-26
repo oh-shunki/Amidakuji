@@ -16,7 +16,7 @@ bp = Blueprint("cancel", __name__)
 def cancel(amida_id_b62):
     """⑧取消画面制御"""
 
-    return render_template("amida/cancel.html")
+    return render_template("amida/cancel.html", amida_id_b62=amida_id_b62)
 
 @bp.route("/do", methods=("POST",))
 @user_auth_required
