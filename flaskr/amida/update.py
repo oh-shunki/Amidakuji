@@ -45,7 +45,7 @@ def update(amida_id_b62):
     if not (allowed_once or check_password_hash(admin_password_hash, admin_password)):
         flash("正しい管理パスワードを入力してください")
 
-        return redirect(url_for("amida.amida", amida_id_b62=amida_id_b62))
+        return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
 
     # テンプレートに渡さない項目を削除
     amida.pop("admin_password", None)
