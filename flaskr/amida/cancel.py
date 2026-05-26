@@ -1,13 +1,12 @@
 """あみだくじ抽籤取消制御"""
 from werkzeug.security import check_password_hash
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, abort
+    Blueprint, flash, redirect, render_template, request, url_for, abort, g
     )
 
 from .user_auth import user_auth_required
 
 from .. import db
-from ..utils import amida_id_b62_to_uuid
 from ..conform import conform
 
 bp = Blueprint("cancel", __name__)
@@ -16,17 +15,6 @@ bp = Blueprint("cancel", __name__)
 @user_auth_required
 def cancel(amida_id_b62):
     """⑧取消画面制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
 
     return render_template("amida/cancel.html")
 
@@ -34,17 +22,8 @@ def cancel(amida_id_b62):
 @user_auth_required
 def do_cancel(amida_id_b62):
     """取消処理制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida = g.amida
+    amida_id = g.amida_id
 
     # 開封済の場合はエラー
     if amida.get("is_opened"):

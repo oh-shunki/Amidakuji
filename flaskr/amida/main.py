@@ -4,7 +4,7 @@ import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
-    flash, redirect, render_template, request, session, url_for, abort
+    flash, redirect, render_template, request, session, url_for, abort, g
     )
 
 from . import bp
@@ -12,7 +12,6 @@ from .amida_map import get_goals
 from .user_auth import user_auth_required
 
 from .. import db
-from ..utils import amida_id_to_b62, amida_id_b62_to_uuid
 from ..conform import conform
 
 @bp.route("/")
@@ -22,17 +21,8 @@ def main(amida_id_b62):
         ⑤あみだくじ画面（未開封）
         ⑨あみだくじ画面（開封済）
     """
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida = g.amida
+    amida_id = g.amida_id
 
     amida.pop("admin_password_hash", None)
     amida.pop("user_password_hash", None)
@@ -68,17 +58,8 @@ def main(amida_id_b62):
 @user_auth_required
 def do_draw(amida_id_b62):
     """あみだくじ抽籤作業制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida = g.amida
+    amida_id = g.amida_id
 
     # 開封済みの場合はエラー
     if amida.get("is_opened"):
@@ -130,17 +111,8 @@ def do_draw(amida_id_b62):
 @user_auth_required
 def do_open(amida_id_b62):
     """あみだくじ開封作業制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida = g.amida
+    amida_id = g.amida_id
 
     # 開封済みの場合はエラー
     if amida.get("is_opened"):
@@ -170,17 +142,7 @@ def do_open(amida_id_b62):
 @user_auth_required
 def delete_amida(amida_id_b62):
     """あみだくじ削除作業制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida_id = g.amida_id
 
     # 認証
     admin_password = request.form.get("admin_password")

@@ -3,28 +3,18 @@ import functools
 
 from werkzeug.security import check_password_hash
 from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for, abort
+    Blueprint, flash, redirect, render_template, request, session, url_for, abort, g
     )
 
 from .. import db
-from ..utils import amida_id_to_b62, amida_id_b62_to_uuid
 
 bp = Blueprint("user_auth", __name__)
 
 @bp.route("/", methods=("GET", "POST"))
 def user_auth(amida_id_b62):
     """④ユーザ認証画面制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida = g.amida
+    amida_id = g.amida_id
 
     user_password_hash = db.get_user_password_hash_from_amida(amida_id)
 
@@ -62,11 +52,7 @@ def user_auth_required(view):
     @functools.wraps(view)
     def wrapped_view(*args, **kwargs):
         amida_id_b62 = kwargs.get("amida_id_b62")
-        try:
-            amida_id = amida_id_b62_to_uuid(amida_id_b62)
-        except ValueError:
-            # このIDのはBase62型ではない
-            abort(404)
+        amida_id = g.amida_id
 
         user_password_hash = db.get_user_password_hash_from_amida(amida_id)
         if user_password_hash:

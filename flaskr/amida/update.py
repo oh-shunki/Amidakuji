@@ -3,7 +3,7 @@ import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for, abort
+    Blueprint, flash, redirect, render_template, request, session, url_for, abort, g
     )
 
 from .user_auth import user_auth_required
@@ -19,17 +19,8 @@ bp = Blueprint("update", __name__)
 @user_auth_required
 def update(amida_id_b62):
     """➉設定変更画面制御"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida = g.amida
+    amida_id = g.amida_id
 
     # 開封済みの場合はエラー
     if amida.get("is_opened"):
@@ -65,17 +56,7 @@ def update(amida_id_b62):
 @user_auth_required
 def do_update(amida_id_b62):
     """設定変更実行"""
-    try:
-        amida_id = amida_id_b62_to_uuid(amida_id_b62)
-    except ValueError:
-        # このIDのはBase62型ではない
-        abort(404)
-
-    amida = db.get_amida(amida_id)
-
-    # このIDは存在していない
-    if amida is None:
-        abort(404)
+    amida_id = g.amida_id
 
     errors, amida, amida_items = get_and_validate_form(request.form, mode="update")
 
