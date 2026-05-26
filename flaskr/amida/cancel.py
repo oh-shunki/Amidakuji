@@ -28,7 +28,7 @@ def cancel(amida_id_b62):
     if amida is None:
         abort(404)
 
-    return render_template("amida/cancel.html")
+    return render_template("amida/cancel.html", amida_id_b62=amida_id_b62)
 
 @bp.route("/do", methods=("POST",))
 @user_auth_required

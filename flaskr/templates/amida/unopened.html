@@ -16,7 +16,7 @@
                     <span class="arrowSpan d-flex flex-column align-items-center">
                         {# TODO キャンセル機能の実装 #}
                         <a class="p-1 bg-lightgray text-black vertical-text text-decoration-none user-select-all"
-                           href="{# {{ url_for('amida.cancel.cancel', amida_id_b62=amida_id_b62, line_no=line_no) }} #}">取消</a>
+                           href="{{ url_for('amida.cancel.cancel', amida_id_b62=amida_id_b62, line_no=line_no) }}">取消</a>
                         <span class="text-nowrap user-select-all">{{ amida.amida_nicknames[line_no] }}</span>
                     </span>
                 {% else %}
