@@ -103,7 +103,7 @@ def do_draw(amida_id_b62):
     if success:
         flash("成功しました")
     else:
-        flash("失敗しました")
+        flash("失敗したのでやり直して下さい。")
 
     session[f"{amida_id_b62}_do_draw_conform_once"] = True
 
