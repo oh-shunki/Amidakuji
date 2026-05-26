@@ -3,7 +3,7 @@
 {% block title %}
 	{% if mode == "create" %}
 		③作成確認画面
-	{% elif mode == "do_draw" %}
+	{% elif mode == "do_draw" or mode == "cancel" %}
 		⑦結果確認画面
 	{% elif mode == "update" %}
 		⑪変更確認画面
@@ -21,7 +21,7 @@
 		<h5>
 			<a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-primary">作成したあみだくじのページへ</a>
 		</h5>
-	{% elif mode == "do_draw" %}
+	{% elif mode == "do_draw" or mode == "cancel" %}
 		{% for message in get_flashed_messages() %}
 			<h2>{{ message }}</h2>
 		{% endfor %}
