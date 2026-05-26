@@ -159,6 +159,7 @@ def delete_amida(amida_id):
     db = get_db()
     try:
         with db.cursor() as cursor:
+            # あみだくじIDの特定 & ロック
             cursor.execute(
                     "SELECT 1 FROM amidas WHERE amida_id = %s FOR UPDATE",
                     (amida_id,)
@@ -167,6 +168,8 @@ def delete_amida(amida_id):
             if not result:
                 return False
 
+            # あみだくじの削除
+            # amida_lines, amida_items, amida_draws は DB 制約で自動的に消える
             cursor.execute(
                     "DELETE FROM amidas WHERE amida_id = %s", (amida_id,)
             )
@@ -223,7 +226,8 @@ def get_line_count_from_amida(amida_id) -> int:
 def get_option_auto_open_from_amida(amida_id) -> bool:
     """あみだくじに自動開封設定を取得
     Return
-        成功：bool
+        オン：True
+        オフ：False
         失敗：False (Default)
     """
     db = get_db()
@@ -242,7 +246,8 @@ def get_option_auto_open_from_amida(amida_id) -> bool:
 def get_option_hide_items_from_amida(amida_id) -> bool:
     """あみだくじに線の隠す設定を取得
     Return
-        成功：bool
+        オン：True
+        オフ：False
         失敗：True (Default)
     """
     db = get_db()
@@ -310,7 +315,8 @@ def get_user_password_hash_from_amida(amida_id) -> str:
 def get_is_opened_from_amida(amida_id) -> bool:
     """あみだくじに開封状態を取得
     Return
-        成功：bool
+        開封済：True
+        未開封：False
         失敗：None
     """
     db = get_db()
