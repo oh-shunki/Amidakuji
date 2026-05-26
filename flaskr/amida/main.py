@@ -105,6 +105,8 @@ def do_draw(amida_id_b62):
     else:
         flash("失敗しました")
 
+    session[f"{amida_id_b62}_do_draw_conform_once"] = True
+
     return redirect(url_for("amida.do_draw_conform", amida_id_b62=amida_id_b62))
 
 @bp.route("/do_open", methods=("POST",))
@@ -131,6 +133,8 @@ def do_open(amida_id_b62):
         if not db.do_open(amida_id, goals):
             abort(500, description="開封するとき、不明なエラーが出ました。")
 
+        session[f"{amida_id_b62}_do_open_conform_once"] = True
+
         return redirect(url_for("amida.do_open_conform", amida_id_b62=amida_id_b62))
 
     # 認証エラー
@@ -154,6 +158,8 @@ def delete_amida(amida_id_b62):
         if not db.delete_amida(amida_id):
             abort(500, description="削除するとき、不明なエラーが出ました。")
 
+        session[f"{amida_id_b62}_delete_conform_once"] = True
+
         return redirect(url_for("index.delete_conform", amida_id_b62=amida_id_b62))
 
     # 認証エラー
@@ -167,10 +173,16 @@ def delete_amida(amida_id_b62):
 @user_auth_required
 def do_draw_conform(amida_id_b62):
     """⑦結果確認画面制御"""
+    if not session.pop(f"{amida_id_b62}_do_draw_conform_once", None):
+        abort(403, description="このページに直接アクセスすることはできません。")
+
     return conform(amida_id_b62, mode="do_draw")
 
 @bp.route("/do_open/conform")
 @user_auth_required
 def do_open_conform(amida_id_b62):
     """⑫開封確認画面制御"""
+    if not session.pop(f"{amida_id_b62}_do_open_conform_once", None):
+        abort(403, description="このページに直接アクセスすることはできません。")
+
     return conform(amida_id_b62, mode="do_open")

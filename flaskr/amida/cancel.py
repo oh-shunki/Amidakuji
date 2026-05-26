@@ -1,7 +1,7 @@
 """あみだくじ抽籤取消制御"""
 from werkzeug.security import check_password_hash
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, abort, g
+    Blueprint, flash, redirect, render_template, request, session, url_for, abort, g
     )
 
 from .user_auth import user_auth_required
@@ -67,10 +67,15 @@ def do_cancel(amida_id_b62):
     else:
         flash("失敗しました")
 
+    session[f"{amida_id_b62}_cancel_conform_once"] = True
+
     return redirect(url_for("amida.cancel.cancel_conform", amida_id_b62=amida_id_b62))
 
 @bp.route("/conform")
 @user_auth_required
 def cancel_conform(amida_id_b62):
     """⑦結果確認画面（取消）制御"""
+    if not session.pop(f"{amida_id_b62}_cancel_conform_once", None):
+        abort(403, description="このページに直接アクセスすることはできません。")
+
     return conform(amida_id_b62, mode="cancel")

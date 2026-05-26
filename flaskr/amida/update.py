@@ -97,9 +97,14 @@ def do_update(amida_id_b62):
     if not success:
         abort(500, description="設定変更するとき、不明なエラーが出ました。")
 
+    session[f"{amida_id_b62}_update_conform_once"] = True
+
     return redirect(url_for("amida.update.update_conform", amida_id_b62=amida_id_b62))
 
 @bp.route("/conform")
 def update_conform(amida_id_b62):
     """⑪変更確認画面制御"""
+    if not session.pop(f"{amida_id_b62}_update_conform_once", None):
+        abort(403, description="このページに直接アクセスすることはできません。")
+
     return conform(amida_id_b62, mode="update")
