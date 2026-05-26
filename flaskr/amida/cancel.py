@@ -39,7 +39,7 @@ def do_cancel(amida_id_b62):
 
     # 抽籤記録がない場合はエラー
     line_id = line.get("line_id")
-    draw = db.get_draw(line_id)
+    draw = db.get_draw_from_line(line_id)
     if draw is None:
         abort(404)
 
