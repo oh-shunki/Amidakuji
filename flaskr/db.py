@@ -203,8 +203,8 @@ def get_amida(amida_id) -> dict:
 def get_line_count_from_amida(amida_id) -> int:
     """あみだくじに線の本数を取得
     Return
-        成功：本数
-        失敗：0
+        成功：線の本数
+        失敗：None
     """
     db = get_db()
     try:
@@ -214,11 +214,7 @@ def get_line_count_from_amida(amida_id) -> int:
                 (amida_id,)
             )
             result = cursor.fetchone()
-            if result is None:
-                return 0
-
-            line_count = result.get("line_count")
-            return line_count if line_count is not None else 0
+            return result["line_count"] if result  else None
 
     except pymysql.Error:
         return None
