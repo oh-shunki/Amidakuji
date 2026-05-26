@@ -61,11 +61,9 @@ def do_cancel(amida_id_b62):
                                 amida_id_b62=amida_id_b62,
                                 line_no=line_no))
 
-    success = db.do_cancel(amida_id, line_no)
-    if success:
-        flash("成功しました")
-    else:
-        flash("失敗しました")
+    db.do_cancel(amida_id, line_no)
+
+    flash("成功しました")
 
     session[f"{amida_id_b62}_cancel_conform_once"] = True
 
