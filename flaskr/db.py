@@ -375,6 +375,26 @@ def get_lines_status_str_from_amida(amida_id) -> list[str]:
     except pymysql.Error:
         return None
 
+def get_remain_line_count_from_amida(amida_id) -> int:
+    """あみだくじに余った線の数を取得
+    Return
+        成功：余った線の数
+        失敗：None
+    """
+    db = get_db()
+    try:
+        with db.cursor() as cursor:
+            cursor.execute("""
+                    SELECT COUNT(*) AS remain_line_count FROM amida_lines
+                    WHERE amida_id = %s and status = 'ready'
+                    """, (amida_id,)
+            )
+            result = cursor.fetchone()
+            return result["remain_line_count"] if result else None
+
+    except pymysql.Error:
+        return None
+
 def get_nicknames_from_amida(amida_id) -> list:
     """あみだくじに参加者のニックネームを一括取得（line_no 順）
     Return
