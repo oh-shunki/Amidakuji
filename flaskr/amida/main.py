@@ -94,11 +94,17 @@ def do_draw(amida_id_b62):
 
     password_hash = generate_password_hash(password)
 
-    success = db.do_draw(amida_id, line_no, nickname, password_hash)
-    if success:
-        flash("成功しました")
-    else:
+    if not db.do_draw(amida_id, line_no, nickname, password_hash):
         flash("失敗したのでやり直して下さい。")
+
+    flash("成功しました")
+
+    # 自動開封オンの場合は、余った本数チェック
+    if amida.get("option_auto_open") and db.get_remain_line_count_from_amida(amida_id) == 0:
+        amida_map = amida.get("amida_map")
+        goals = get_goals(amida_map)
+
+        db.do_open(amida_id, goals)
 
     session[f"{amida_id_b62}_do_draw_conform_once"] = True
 
