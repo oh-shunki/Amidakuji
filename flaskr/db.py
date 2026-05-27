@@ -1,5 +1,7 @@
 """モデル"""
+import json
 import uuid
+
 from enum import Enum
 
 import pymysql
@@ -215,6 +217,11 @@ def get_amida(amida_id) -> dict:
                     (amida_id,)
             )
             result = cursor.fetchone()
+
+            if result:
+                # あみだマップを Python リストへ変換
+                result["amida_map"] = json.loads(result["amida_map"])
+
             return result
 
     except pymysql.Error:
