@@ -38,13 +38,14 @@ def main(amida_id_b62):
     # 未開封
     option_hide_items = amida.get("option_hide_items")
 
-    # option_hide_items オンの場合はアイテムをランダムに並び替える
+    # option_hide_items オンの場合
     if option_hide_items:
+        # アイテムをランダムに並び替える
         random.shuffle(amida["amida_items"])
 
-    # あみだくじマップを本数だけにする
-    amida_map = amida.pop("amida_map", None)
-    amida["amida_map"] = [[[0]] for _ in amida_map]
+        # あみだくじマップを本数だけにする
+        amida_map = amida.pop("amida_map", None)
+        amida["amida_map"] = [[[0]] for _ in amida_map]
 
     return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,
                                                   amida=amida)

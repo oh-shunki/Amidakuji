@@ -71,7 +71,7 @@ function showMap() {
     amidaCtx.strokeStyle = MAP_COLOR;
     amidaCtx.lineWidth = MAP_LINE_WIDTH;
 
-    // 未開封時に枠だけ表示
+    // 未開封時、option_hide_items オンの場合は枠だけ表示
     if (mapY == 1) {
         for (let x = 0; x < mapX; x++) {
             drawLine(amidaCtx, x, 0, x, 1);

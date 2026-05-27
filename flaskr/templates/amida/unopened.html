@@ -30,9 +30,11 @@
         <div id="canvasContainer" class="canvas-container">
             <canvas id="amidaCanvas"></canvas>
             <canvas id="routeCanvas"></canvas>
-            <h5 id="canvasMsg" class="d-flex justify-content-center align-items-center pe-none">
-                まだ、「くじ」の本体は開封されていません。
-            </h5>
+            {% if amida.option_hide_items %}
+                <h5 id="canvasMsg" class="d-flex justify-content-center align-items-center pe-none">
+                    まだ、「くじ」の本体は開封されていません。
+                </h5>
+            {% endif %}
         </div>
 
         <div id="itemsDiv" class="d-flex justify-content-center align-items-start">
