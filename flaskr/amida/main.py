@@ -1,5 +1,4 @@
 """あみだくじ全体制御"""
-import json
 import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,13 +30,8 @@ def main(amida_id_b62):
     amida["amida_nicknames"] = db.get_nicknames_from_amida(amida_id) or []
     amida["amida_items"] = db.get_items_from_amida(amida_id) or []
 
-    amida_map_json = amida.pop("amida_map", None)
-    amida_map = json.loads(amida_map_json)
-
-    # 開封済
     if amida.get("is_opened"):
-        amida["amida_map"] = amida_map
-
+        # 開封済
         return render_template("amida/opened.html", amida_id_b62=amida_id_b62,
                                                     amida=amida)
 
@@ -49,6 +43,7 @@ def main(amida_id_b62):
         random.shuffle(amida["amida_items"])
 
     # あみだくじマップを本数だけにする
+    amida_map = amida.pop("amida_map", None)
     amida["amida_map"] = [[[0]] for _ in amida_map]
 
     return render_template("amida/unopened.html", amida_id_b62=amida_id_b62,
