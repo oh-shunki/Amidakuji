@@ -12,8 +12,8 @@ from . import user_auth
 
 bp.register_blueprint(user_auth.bp, url_prefix="/user_auth")
 
-from . import nickname
-bp.register_blueprint(nickname.bp, url_prefix="/nickname")
+from . import draw
+bp.register_blueprint(draw.bp, url_prefix="/draw")
 
 from . import update
 bp.register_blueprint(update.bp, url_prefix="/update")
