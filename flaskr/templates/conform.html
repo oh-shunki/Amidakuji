@@ -17,7 +17,7 @@
 {% block content %}
 	{% if mode == "create" %}
 		<h2>あみだくじを作成しました</h2>
-		<p>{{ url_for('amida.main', amida_id_b62=amida_id_b62, _external=True) }}</p>
+		<p class="user-select-all">{{ url_for('amida.main', amida_id_b62=amida_id_b62, _external=True) }}</p>
 		<h5>
 			<a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-primary">作成したあみだくじのページへ</a>
 		</h5>
