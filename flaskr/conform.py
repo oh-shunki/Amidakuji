@@ -1,28 +1,14 @@
 """③⑦⑪⑫⑬確認画面制御"""
-from flask import render_template, abort
+from flask import render_template
 
-from . import db
-from .utils import amida_id_b62_to_uuid
 
 def conform(amida_id_b62 = None, mode=None):
     """確認画面処理"""
-    results = {}
-
     if amida_id_b62:
-        try:
-            amida_id = amida_id_b62_to_uuid(amida_id_b62)
-        except ValueError:
-            # このIDのはBase62型ではない
-            abort(404)
+        # 循環インポート回避
+        from .amida import validate_amida_id
 
-        amida = db.get_amida(amida_id)
+        # amida_id_b62 ある場合は、検証をする
+        validate_amida_id()
 
-        # このIDは存在していない
-        if amida is None:
-            abort(404)
-
-        results["title"] = amida.get("title")
-
-    return render_template("conform.html", amida_id_b62=amida_id_b62,
-                                           mode=mode,
-                                           results=results)
+    return render_template("conform.html", amida_id_b62=amida_id_b62, mode=mode)
