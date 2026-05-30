@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="{{ url_for("amida.update.do_update", amida_id_b62=amida_id_b62) }}"
-                        style="width: 650px; margin:0 auto;" data-mode="update">
+    <form method="post" class="amidaForm" data-mode="update"
+                        action="{{ url_for("amida.update.do_update", amida_id_b62=amida_id_b62) }}">
 		<div class="mb-3">
 			<label for="title" class="form-label">あみだくじのタイトル</label>
             <input type="text" id="title" name="title" class="form-control"
