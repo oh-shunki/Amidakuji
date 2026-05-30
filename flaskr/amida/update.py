@@ -15,10 +15,14 @@ from ..conform import conform
 
 bp = Blueprint("update", __name__)
 
-@bp.route("/", methods=("GET",))
+@bp.route("/", methods=("GET", "POST"))
 @user_auth_required
 def update(amida_id_b62):
     """➉設定変更画面制御"""
+    if request.method == "GET":
+        # GET の場合はエラー
+        abort(403, description="このページに直接アクセスすることはできません。")
+
     amida = g.amida
     amida_id = g.amida_id
 
