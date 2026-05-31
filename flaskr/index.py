@@ -1,5 +1,5 @@
 """初期画面制御"""
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session, abort
 
 from .conform import conform
 
@@ -10,8 +10,8 @@ def index():
     """①初期画面制御"""
     return render_template("index.html")
 
-@bp.route("/delete/conform")
-def delete_conform():
+@bp.route("/delete/conform/<amida_id_b62>")
+def delete_conform(amida_id_b62):
     """⑬削除確認画面制御"""
     if not session.pop(f"{amida_id_b62}_delete_conform_once", None):
         abort(403, description="このページに直接アクセスすることはできません。")
