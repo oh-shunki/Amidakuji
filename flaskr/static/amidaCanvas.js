@@ -3,9 +3,13 @@
 // const amidaMap
 
 const MAP_COLOR = 'black';
+const MAP_CIRCLE_COLOR = 'gray';
 const MAP_LINE_WIDTH = 1;
+
 const ROUTE_COLOR = 'red';
 const ROUTE_LINE_WIDTH= 5;
+
+const RADIUS = 5;
 
 const DELAY = 2000; // 循環表示待機時間
 
@@ -64,6 +68,15 @@ function drawLine(ctx, x1, y1, x2, y2) {
     ctx.stroke();
 }
 
+// 画面に合わせて玉を描く
+function drawCircle(ctx, x, color) {
+    // 下端の玉を描く
+    ctx.beginPath();
+    ctx.arc((x + 1) * spacingX, canvasH - RADIUS - 1, RADIUS, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+}
+
 // マップ表示
 function showMap() {
     clearRoute();
@@ -88,6 +101,8 @@ function showMap() {
                 drawLine(amidaCtx, x, y + 1, x + 1, y + 1);
             }
         }
+
+        drawCircle(amidaCtx, x, MAP_CIRCLE_COLOR);
     }
 }
 
@@ -113,6 +128,8 @@ function showRoute(lineNo) {
             currentX = nextX;
         }
     }
+
+    drawCircle(routeCtx, currentX, ROUTE_COLOR);
 }
 
 // ルートを消す
