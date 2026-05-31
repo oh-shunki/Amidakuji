@@ -3,8 +3,6 @@
 {% block title %}抽籤取消画面{% endblock %}
 
 {% block content %}
-    <h1>抽籤取消画面</h1>
-
     <form method="post" action="{{ url_for('amida.cancel.do_cancel', amida_id_b62=amida_id_b62) }}">
         <input type="hidden" name="line_no" value="{{ request.args.get('line_no') }}">
 
