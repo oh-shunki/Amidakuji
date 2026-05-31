@@ -17,13 +17,20 @@ def generate_map(line_count) -> list:
     if line_count < 2:
         return None
 
+    # 空のマップを生成
     amida_map = [[EMPTY] * HEIGHT for _ in range(line_count)]
 
     for line_no in range(line_count - 1):
-        y_counts = random.randint(HORIZONTAL_LINES_MIN, HORIZONTAL_LINES_MAX)
-        empty_ys = [y for y in range(1, HEIGHT - 1) if amida_map[line_no][y] == EMPTY]
-        ys = random.sample(empty_ys, k=y_counts)
+        # ランダムで横線の数を決める
+        y_count = random.randint(HORIZONTAL_LINES_MIN, HORIZONTAL_LINES_MAX)
 
+        # 空の横線を取得（1番上と下から2番まで除外）
+        empty_ys = [y for y in range(1, HEIGHT - 2) if amida_map[line_no][y] == EMPTY]
+
+        # ランダムで横線の位置を決める
+        ys = random.sample(empty_ys, k=y_count)
+
+        # マップを描く
         for y in ys:
             amida_map[line_no][y] = RIGHT
             amida_map[line_no + 1][y] = LEFT
