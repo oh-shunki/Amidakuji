@@ -3,7 +3,7 @@
 {% block title %}⑥ニックネーム入力画面{% endblock %}
 
 {% block content %}
-	<form action="{{ url_for('amida.do_draw', amida_id_b62=amida_id_b62) }}" method="post">
+	<form action="{{ url_for('amida.draw.do_draw', amida_id_b62=amida_id_b62) }}" method="post">
 		<input type="hidden" name="line_no" value="{{ request.args.get('line_no') }}">
 		<div class='mb-3'>
 			<label class='form-label'>ニックネーム</label>

@@ -10,7 +10,7 @@
                 {% if amida.amida_lines_status[line_no] == "ready" %}
                     <span class="arrowSpan p-1 d-flex flex-column align-items-center">
                         <a class="p-1 bg-pink text-black vertical-text text-decoration-none user-select-all"
-                           href="{{ url_for('amida.nickname.nickname', amida_id_b62=amida_id_b62, line_no=line_no ) }}">コレにする↓</a>
+                           href="{{ url_for('amida.draw.draw', amida_id_b62=amida_id_b62, line_no=line_no ) }}">コレにする↓</a>
                     </span>
                 {% elif amida.amida_lines_status[line_no] == "drawn" %}
                     <span class="arrowSpan d-flex flex-column align-items-center">
