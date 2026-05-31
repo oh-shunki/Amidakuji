@@ -75,6 +75,8 @@ def do_draw(amida_id_b62):
     if not db.do_draw(amida_id, line_no, nickname, password_hash):
         flash("失敗したのでやり直して下さい。")
 
+        return redirect(url_for("amida.draw.draw_conform", amida_id_b62=amida_id_b62))
+
     flash("成功しました")
 
     # 自動開封オンの場合は、余った本数チェック
