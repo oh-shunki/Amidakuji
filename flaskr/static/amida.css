@@ -28,13 +28,14 @@ main {
 }
 
 #amidaDiv {
-    width: 80vw;
-    height: 70vh;
+    width: 100%;
+    flex: 1;
 }
 
 .canvas-container {
     position: relative;
     width: 100%;
+    min-height: 150px;
     flex: 1;
 }
 
