@@ -15,13 +15,6 @@ bp = Blueprint("cancel", __name__)
 @user_auth_required
 def cancel(amida_id_b62):
     """⑧取消画面制御"""
-
-    return render_template("amida/cancel.html", amida_id_b62=amida_id_b62)
-
-@bp.route("/do", methods=("POST",))
-@user_auth_required
-def do_cancel(amida_id_b62):
-    """取消処理制御"""
     amida = g.amida
     amida_id = g.amida_id
 
@@ -29,13 +22,31 @@ def do_cancel(amida_id_b62):
     if amida.get("is_opened"):
         abort(403, description="開封済みのあみだくじは抽籤取消できません。")
 
-    line_no = request.form.get("line_no", "")
+    # line_no 指定されない場合はエラー
+    line_no = request.args.get("line_no")
+    if not line_no:
+        abort(400, description="線は指定されていません。やり直してください。")
+
+    # line がない場合はエラー
     line = db.get_line_by_no_from_amida(amida_id, line_no)
+    if not line:
+        abort(400, description="存在のない線は抽籤取消できません。やり直してくささい。")
 
     # 状態は DRAWN 以外の場合はエラー
     line_status = db.LineStatus(line.get("status"))
     if line_status != db.LineStatus.DRAWN:
         abort(403, description="この抽籤は取消できません。")
+
+    return render_template("amida/cancel.html", amida_id_b62=amida_id_b62)
+
+@bp.route("/do", methods=("POST",))
+@user_auth_required
+def do_cancel(amida_id_b62):
+    """取消処理制御"""
+    amida_id = g.amida_id
+
+    line_no = request.form.get("line_no")
+    line = db.get_line_by_no_from_amida(amida_id, line_no)
 
     # 抽籤記録がない場合はエラー
     line_id = line.get("line_id")
