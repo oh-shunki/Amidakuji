@@ -50,7 +50,6 @@ def update(amida_id_b62):
     # アイテム（当たりのみ）を取得
     amida_items = db.get_items_from_amida(amida_id)
     amida_items = [item for item in amida_items if item["title"]]
-    print(amida_items)
 
     return render_template("amida/update.html", amida_id_b62=amida_id_b62,
                                                 amida=amida,
@@ -81,9 +80,15 @@ def do_update(amida_id_b62):
 
     amida["amida_id"] = amida_id_b62_to_uuid(amida_id_b62)
 
+    # DB からアイテムを取得
     db_items = db.get_items_from_amida(amida_id)
     db_items_title = [item["title"] for item in db_items if item.get("title")]
 
+    # 比較する前にソート
+    amida_items.sort()
+    db_items_title.sort()
+
+    # アイテムが変更される限り、更新する
     if amida_items == db_items_title:
         amida_items = None
 
