@@ -16,6 +16,27 @@ bp = Blueprint("draw", __name__)
 @user_auth_required
 def draw(amida_id_b62):
     """⑥ニックネーム入力画面制御"""
+    amida = g.amida
+    amida_id = g.amida_id
+
+    # 開封済の場合はエラー
+    if amida.get("is_opened"):
+        abort(403, description="開封済みのあみだくじは抽籤できません。")
+
+    line_count = amida.get("line_count")
+
+    line_no = request.args.get("line_no")
+    if not line_no:
+        abort(400, description="線は指定されていません。やり直してください。")
+
+    line = db.get_line_by_no_from_amida(amida_id, line_no)
+    if not line:
+        abort(400, description="存在のない線は抽籤できません。やり直してくささい。")
+
+    # 状態は READY 以外の場合はエラー
+    line_status = db.LineStatus(line.get("status"))
+    if line_status != db.LineStatus.READY:
+        abort(403, description="この抽籤はできません。")
 
     return render_template("amida/nickname.html", amida_id_b62=amida_id_b62)
 
@@ -26,20 +47,7 @@ def do_draw(amida_id_b62):
     amida = g.amida
     amida_id = g.amida_id
 
-    # 開封済の場合はエラー
-    if amida.get("is_opened"):
-        abort(403, description="開封済みのあみだくじは抽籤できません。")
-
-    line_count = amida.get("line_count")
-
-    # line_no の検証
-    try:
-        line_no = int(request.form.get("line_no"))
-        if not 0 <= line_no < line_count:
-            raise ValueError("Invalid line_no")
-
-    except (ValueError, TypeError) as e:
-        abort(400, description=e)
+    line_no = request.form.get("line_no")
 
     nickname = request.form.get("nickname", "").strip()
     password = request.form.get("password", "")
