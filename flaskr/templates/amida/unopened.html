@@ -43,7 +43,7 @@
                     {% if amida.option_hide_items %}
                         <span class="p-1 bg-white border border-black text-nowrap user-select-none">？</span>
                     {% elif item.title %}
-                        <span class="p-1 bg-white text-nowrap user-select-all">{{ item.title }}</span>
+                        <span class="p-1 text-nowrap user-select-all">{{ item.title }}</span>
                     {% endif %}
                 </span>
             {% endfor %}
@@ -57,7 +57,7 @@
                 <div class="d-flex justify-content-center">
                     {% for item in amida.amida_items %}
                         {% if item.title %}
-                            <span class="p-1 m-1 bg-white border border-black text-nowrap user-select-all">{{ item.title }}</span>
+                            <span class="p-1 m-1 border border-black text-nowrap user-select-all">{{ item.title }}</span>
                         {% endif %}
                     {% endfor %}
                 </div>
