@@ -68,5 +68,31 @@
 
 		<button type="submit" class="btn btn-primary">変更する</button>
 
-    </form>
+	</form>
+
+	<form method="post" action="{{ url_for('amida.delete_amida', amida_id_b62=amida_id_b62) }}" style="width: 650px; margin:0 auto;">
+
+		<hr>
+		
+        <div class="mb-3">
+			<p class='fw-bold mb-1'>[あみだくじの削除]</p>
+			<label class="form-label" for="delete_admin_password">
+				確認のため、下記に管理パスワードを入れて下さい
+			</label>
+			<input type="password" id="delete_admin_password" name="admin_password" class="form-control" placeholder="********">
+		
+			<button type="submit" class="btn btn-secondary mt-2" formaction="{{ url_for('amida.delete_amida', amida_id_b62=amida_id_b62) }}">
+				削除
+			</button>
+		</div>
+	
+		<div class="mt-3">
+			<button type="submit" class="btn btn-secondary" formaction="{{ url_for('amida.do_open', amida_id_b62=amida_id_b62) }}">
+				くじ本体を開封する
+			</button>
+		</div>
+
+	</form>
+
+    
 {% endblock %}
