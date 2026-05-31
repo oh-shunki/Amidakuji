@@ -23,12 +23,12 @@ def draw(amida_id_b62):
     if amida.get("is_opened"):
         abort(403, description="開封済みのあみだくじは抽籤できません。")
 
-    line_count = amida.get("line_count")
-
+    # line_no 指定されない場合はエラー
     line_no = request.args.get("line_no")
     if not line_no:
         abort(400, description="線は指定されていません。やり直してください。")
 
+    # line がない場合はエラー
     line = db.get_line_by_no_from_amida(amida_id, line_no)
     if not line:
         abort(400, description="存在のない線は抽籤できません。やり直してくささい。")
