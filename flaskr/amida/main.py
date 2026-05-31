@@ -99,7 +99,7 @@ def delete_amida(amida_id_b62):
         if not db.delete_amida(amida_id):
             abort(500, description="削除するとき、不明なエラーが出ました。")
 
-        session[f"{amida_id_b62}_delete_conform_once"] = True
+        session["delete_conform_once"] = True
 
         return redirect(url_for("index.delete_conform", amida_id_b62=amida_id_b62))
 
