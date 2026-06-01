@@ -29,7 +29,7 @@ def get_and_validate_form(form, mode, current_line_count=None):
     line_count = form.get("line_count")
 
     amida_items = form.get("items", "").splitlines()
-    amida_items = [item.strip() for item in amida_items if item.strip()]
+    amida_items = [item.strip()[:20] for item in amida_items if item.strip()]
 
     option_auto_open = form.get("option_auto_open") == "on"
     option_hide_items = form.get("option_hide_items") == "on"
