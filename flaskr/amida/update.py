@@ -19,7 +19,10 @@ bp = Blueprint("update", __name__)
 @user_auth_required
 def update(amida_id_b62):
     """➉設定変更画面制御"""
-    if request.method == "GET":
+    # 削除から飛ばせる場合でも一回許可する
+    allowed_once = session.pop(f"{amida_id_b62}_admin_auth_once", None)
+
+    if request.method == "GET" and not allowed_once:
         # GET の場合はエラー
         abort(403, description="このページに直接アクセスすることはできません。")
 
@@ -33,9 +36,6 @@ def update(amida_id_b62):
     # 認証
     admin_password = request.form.get("admin_password", "")
     admin_password_hash = amida.get("admin_password_hash")
-
-    # 削除から飛ばせる場合でも一回許可する
-    allowed_once = session.pop(f"{amida_id_b62}_admin_auth_once", None)
 
     if not (allowed_once or check_password_hash(admin_password_hash, admin_password)):
         flash("正しい管理パスワードを入力してください")
