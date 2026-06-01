@@ -3,12 +3,20 @@
 {% block title %}抽籤取消画面{% endblock %}
 
 {% block content %}
-    <form method="post" action="{{ url_for('amida.cancel.do_cancel', amida_id_b62=amida_id_b62) }}">
+    <form method="post" class="amidaForm d-flex flex-column"
+                        action="{{ url_for('amida.cancel.do_cancel', amida_id_b62=amida_id_b62) }}">
         <input type="hidden" name="line_no" value="{{ request.args.get('line_no') }}">
 
-        <div class="mb-3">
-            <label class="form-label" for="password">パスワードを入力してください</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="********">
+        <label class="form-label text-nowrap" for="password">パスワードを入力してください</label>
+        <div class="mb-3 d-flex gap-2">
+            <input type="password" class="form-control" id="password" name="password" placeholder="********">
+            <button type="submit" class="btn btn-primary text-nowrap">
+                抽籤取消
+            </button>
+
+            <a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-secondary text-nowrap">
+                戻る
+            </a>
         </div>
 
         {% for message in get_flashed_messages() %}
@@ -17,15 +25,6 @@
             </div>
         {% endfor %}
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                抽籤取消
-            </button>
-
-            <a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-secondary">
-                戻る
-            </a>
-        </div>
 
     </form>
 {% endblock %}
