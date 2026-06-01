@@ -7,17 +7,21 @@
 {% endblock %}
 
 {% block content %}
-	<form method="post">
-		<p>パスワードを入力してください</p>
-		<input type="password" name="user_password" class="form-control" required>
-		<button type='submit' class='btn btn-primary'>OK</button>
+<form method="post" class="amidaForm">
+    <div>
+        <label class="form-label text-nowrap" for="user_password">パスワードを入力してください</label>
+    </div>
 
-		<!-- これはエラーメッセージの表示（あれば） -->
-		{% for message in get_flashed_messages() %}
-			<div class="alert alert-info alert-dismissible fade show" role="error">
-				{{ message }}
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endfor %}
-	</form>
+    <div class="mb-2 d-flex justify-content-center gap-2">
+        <input type="password" class="form-control" id="user_password" name="user_password" placeholder="********">
+        <button type='submit' class='btn btn-primary text-nowrap'>OK</button>
+    </div>
+
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-info alert-dismissible fade show" role="error">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</form>
 {% endblock %}
