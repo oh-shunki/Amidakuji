@@ -8,12 +8,12 @@
 
 {% block content %}
 	<form method="post" class="amidaForm" data-mode="create">
-		<div class="mb-3">
+		<div class="mb-2">
 			<label for="title" class="form-label">あみだくじのタイトル</label>
 			<input type="text" id="title" name="title" class="form-control" maxlength="100" required>
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-2">
 			<label for="line_count" class="form-label">線の数</label>
 			<select id="line_count" name="line_count" class="form-select" required>
 				<option value=""></option>
@@ -38,46 +38,49 @@
 			</select>
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-2">
 			<label for="items" class="form-label">アイテム（改行区切り）</label>
 			<textarea id="items" name="items" class="form-control" required></textarea>
 		</div>
 
 		
-		<div class="mb-3">
+		<div class="mb-2">
 			<label class="form-label">オプション1</label>
 			<input type="checkbox" id="option_auto_open" name="option_auto_open" class="form-check-input">
 			<span>くじが全て選択されたら自動であみだくじを開封する</span>
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-2">
 			<label class="form-label">オプション2</label>
 			<input type="checkbox" id="option_hide_items" name="option_hide_items" class="form-check-input" checked>
 			<span>下のテキストを隠す（推奨）</span>
 		</div>
 	
-		<div class="mb-3">
+		<div class="mb-2">
 			<label class='form-label'>管理パスワード</label>
 			<input type="password" id="admin_password" name="admin_password" class="form-control" placeholder="********" required>
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-2">
 			<label class='form-label'>管理パスワード確認</label>
 			<input type="password" id="admin_password_confirm" name="admin_password_confirm" class="form-control" placeholder="********" required>
 		</div>
 
-		<div class="mb-3">
+		<div class="mb-2">
 			<label class='form-label' for="user_password">利用パスワード（任意）</label>
 			<input type="password" id="user_password" name="user_password" class="form-control" placeholder="********">
 		</div>		
 		
-		<div class="mb-3">
+		<div class="mb-2">
 			<label class='form-label' for="user_password_confirm">利用パスワード確認</label>
 			<input type="password" id="user_password_confirm" name="user_password_confirm" class="form-control" placeholder="********">
 		</div>
 
-        <div id="errorDiv"></div>
-		<button type="submit" class="btn btn-primary">作成する</button>
+        <div class="mb-2 text-center" id="errorDiv"></div>
+
+        <div class="mb-2 d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">作成する</button>
+        </div>
 		
 	</form>
 
