@@ -3,7 +3,8 @@
 {% block title %}⑥ニックネーム入力画面{% endblock %}
 
 {% block content %}
-	<form action="{{ url_for('amida.draw.do_draw', amida_id_b62=amida_id_b62) }}" method="post">
+    <form method="post" class="amidaForm"
+                        action="{{ url_for('amida.draw.do_draw', amida_id_b62=amida_id_b62) }}">
 		<input type="hidden" name="line_no" value="{{ request.args.get('line_no') }}">
 		<div class='mb-3'>
 			<label class='form-label'>ニックネーム</label>
@@ -19,9 +20,9 @@
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		{% endfor %}
-		<div class='d-flex gap-2'>
+		<div class='d-flex justify-content-center gap-2'>
 			<button type="submit" class="btn btn-primary">OK</button>
             <a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-secondary">戻る</a>
 		</div>
-	</form>
+    </form>
 {% endblock %}
