@@ -7,9 +7,9 @@
 
         <div id="arrowsDiv" class="my-1 d-flex justify-content-center align-items-end">
             {% for line_no in range(amida.line_count) %}
-                <span class="arrowSpan d-flex flex-column align-items-center">
+                <span class="arrowSpan d-flex flex-column align-items-center responsive-box">
                     {% if amida.amida_lines_status[line_no] == "drawn" %}
-                        <span class="p-1 my-1 text-nowrap">{{ amida.amida_nicknames[line_no] }}</span>
+                        <span class="responsive-text">{{ amida.amida_nicknames[line_no] }}</span>
                     {% elif amida.amida_lines_status[line_no] == "canceled" %}
                         <span class="p-1 my-1 vertical-text text-decoration-none bg-dark text-light">取消済</span>
                     {% endif %}
@@ -27,8 +27,8 @@
         <div id="itemsDiv" class="d-flex justify-content-center align-items-start">
             {% for item in amida.amida_items %}
                 {% if item.title %}
-                    <span class="itemSpan d-flex flex-column align-items-center">
-                        <span class="p-1 text-nowrap">{{ item.title }}</span>
+                    <span class="itemSpan d-flex flex-column align-items-center responsive-box">
+                        <span class="responsive-text user-select-all">{{ item.title }}</span>
                     </span>
                 {% else %}
                     <span class="itemSpan"></span>

@@ -50,15 +50,46 @@ function init() {
 
     document.querySelectorAll('.arrowSpan').forEach(child => {
         child.style.width = spacingX + 'px';
+        child.style.maxWidth = spacingX + 'px';
     });
 
     document.querySelectorAll('.itemSpan').forEach(child => {
         child.style.width = spacingX + 'px';
+        child.style.maxWidth = spacingX + 'px';
     });
 
     showMap();
+    fitAllTexts();
 }
-init();
+
+// 文字を合わせてサイズの調整
+function fitAllTexts() {
+  const boxes = document.querySelectorAll('.responsive-box');
+
+  boxes.forEach(box => {
+    const text = box.querySelector('.responsive-text');
+    if (!text) return;
+
+    // 初期状態に戻す（折り返しを解除してサイズをリセット）
+    text.classList.remove('wrap-text');
+    let fontSize = 16;
+    text.style.fontSize = fontSize + 'px';
+
+    // ボックスの内側の幅（パディングを除く）を取得
+    const maxWidth = box.clientWidth - 2;
+
+    // テキストの幅がボックスの幅より大きい間、1pxずつ小さくする（最小8px）
+    while (text.offsetWidth > maxWidth && fontSize > 8) {
+      fontSize--;
+      text.style.fontSize = fontSize + 'px';
+    }
+
+    // 最小サイズ（8px）でも入り切らない場合は、折り返しを許可する
+    if (text.offsetWidth > maxWidth) {
+      text.classList.add('wrap-text');
+    }
+  });
+}
 
 // 画面に合わせて直線を描く
 function drawLine(ctx, x1, y1, x2, y2) {
@@ -166,5 +197,6 @@ function stopShowRouteLoop() {
     clearRoute();
 }
 
-// 画面サイズが変更される時の再初期化登録
+// ページ読み込み時と、画面サイズ変更時に初期化登録
+window.addEventListener('DOMContentLoaded', init);
 window.addEventListener('resize', init);

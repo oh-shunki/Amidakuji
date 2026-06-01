@@ -1,5 +1,9 @@
 /* あみだくじ画面のスタイルシート */
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
     min-height: 100dvh;
     min-width: 100dvw;
@@ -70,6 +74,31 @@ main {
 .arrowBtn {
     background: none;
     border: none;
+}
+
+.responsive-box {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.responsive-text {
+    white-space: nowrap;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.wrap-text {
+    white-space: normal !important;
+    word-break: break-all;
+    display: inline-block;
+}
+
+.breakdown-item {
+    max-width: 120px;
+    min-width: 40px;
 }
 
 .vertical-text {
