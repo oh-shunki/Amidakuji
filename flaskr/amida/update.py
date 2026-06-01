@@ -64,9 +64,14 @@ def update(amida_id_b62):
 @user_auth_required
 def do_update(amida_id_b62):
     """設定変更実行"""
+    amida = g.amida
     amida_id = g.amida_id
 
-    errors, amida, amida_items = get_and_validate_form(request.form, mode="update")
+    line_count = amida.get("line_count")
+
+    errors, amida, amida_items = get_and_validate_form(request.form,
+                                                       mode="update",
+                                                       current_line_count=line_count)
 
     if errors:
         abort(500, description="更新するとき、不明なエラーが出ました。")
