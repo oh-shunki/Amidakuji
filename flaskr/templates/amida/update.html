@@ -64,7 +64,7 @@
 			<input type="password" id="user_password_confirm" name="user_password_confirm" class="form-control" placeholder="********">
 		</div>
 
-        <div class="mb-2" id="errorDiv"></div>
+        <div class="mb-2 text-center" id="errorDiv">{% if error %}{{ error }}{% endif%}</div>
 
         <div class="mb-2 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary">変更する</button>

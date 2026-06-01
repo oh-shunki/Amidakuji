@@ -79,6 +79,13 @@ def do_open(amida_id_b62):
         return redirect(url_for("amida.do_open_conform", amida_id_b62=amida_id_b62))
 
     # 認証エラー
+    # 設定変更画面からの場合は元の画面にリダイレクト
+    referrer = request.referrer
+    if referrer and "/update" in referrer:
+        session[f"{amida_id_b62}_admin_auth_once"] = True
+
+        return redirect(url_for("amida.update.update", amida_id_b62=amida_id_b62))
+
     flash("正しい管理パスワードを入力してください")
 
     return redirect(url_for("amida.main", amida_id_b62=amida_id_b62))
@@ -103,9 +110,7 @@ def delete_amida(amida_id_b62):
 
         return redirect(url_for("index.delete_conform", amida_id_b62=amida_id_b62))
 
-    # 認証エラー
-    flash("正しい管理パスワードを入力してください")
-
+    # 認証エラー、元の画面にリダイレクト
     session[f"{amida_id_b62}_admin_auth_once"] = True
 
     return redirect(url_for("amida.update.update", amida_id_b62=amida_id_b62))

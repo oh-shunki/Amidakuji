@@ -19,11 +19,15 @@ bp = Blueprint("update", __name__)
 @user_auth_required
 def update(amida_id_b62):
     """➉設定変更画面制御"""
-    # 削除から飛ばせる場合でも一回許可する
+    # 開封・削除から飛ばせる場合でも一回許可する
     allowed_once = session.pop(f"{amida_id_b62}_admin_auth_once", None)
 
+    error = None
+    if allowed_once:
+        error = "パスワードが違います"
+
     if request.method == "GET" and not allowed_once:
-        # GET の場合はエラー
+        # 直接 GET の場合はエラー
         abort(403, description="このページに直接アクセスすることはできません。")
 
     amida = g.amida
@@ -53,7 +57,8 @@ def update(amida_id_b62):
 
     return render_template("amida/update.html", amida_id_b62=amida_id_b62,
                                                 amida=amida,
-                                                amida_items=amida_items)
+                                                amida_items=amida_items,
+                                                error=error)
 
 @bp.route("/do", methods=("POST",))
 @user_auth_required
