@@ -3,7 +3,9 @@ import json
 import random
 
 from werkzeug.security import generate_password_hash
-from flask import Blueprint, redirect, render_template, request, url_for, abort
+from flask import (
+    Blueprint, redirect, render_template, request, session, url_for, abort
+    )
 
 from . import db
 
@@ -54,6 +56,8 @@ def create():
 
         amida_id_b62 = amida_id_to_b62(amida_id)
 
+        session[f"{amida_id_b62}_create_conform_once"] = True
+
         return redirect(url_for("create.create_conform", amida_id_b62=amida_id_b62))
 
     return render_template("create.html")
@@ -61,4 +65,7 @@ def create():
 @bp.route("/conform/<amida_id_b62>")
 def create_conform(amida_id_b62):
     """③作成確認画面制御"""
+    if not session.pop(f"{amida_id_b62}_create_conform_once", None):
+        abort(403, description="このページに直接アクセスすることはできません。")
+
     return conform(amida_id_b62, mode="create")
