@@ -16,30 +16,30 @@
 
 {% block content %}
 	{% if mode == "create" %}
-		<h2>あみだくじを作成しました</h2>
+		<h4>あみだくじを作成しました</h4>
 		<p class="user-select-all">{{ url_for('amida.main', amida_id_b62=amida_id_b62, _external=True) }}</p>
 		<h5>
 			<a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-primary">作成したあみだくじのページへ</a>
 		</h5>
 	{% elif mode == "draw" or mode == "cancel" %}
 		{% for message in get_flashed_messages() %}
-			<h2>{{ message }}</h2>
+			<h4>{{ message }}</h4>
 		{% endfor %}
 		<h5>
 			<a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-primary">あみだくじページに戻る</a>
 		</h5>
 	{% elif mode == "update" %}
-		<h2>変更しました</h2>
+		<h4>変更しました</h4>
 		<h5>
 			<a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-primary">作成したあみだくじのページへ</a>
 		</h5>
 	{% elif mode == "do_open" %}
-		<h2>開封しました</h2>
+		<h4>開封しました</h4>
 		<h5>
 			<a href="{{ url_for('amida.main', amida_id_b62=amida_id_b62) }}" class="btn btn-primary">あみだくじページに戻る</a>
 		</h5>
 	{% elif mode == "delete" %}
-		<h2>削除しました</h2>
+		<h4>削除しました</h4>
 		<!-- ここは、初期画面に誘導するか。そのままするか。まだ検討する -->
 	{% endif %}
 {% endblock %}
