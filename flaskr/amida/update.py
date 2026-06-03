@@ -55,6 +55,9 @@ def update(amida_id_b62):
     amida_items = db.get_items_from_amida(amida_id)
     amida_items = [item for item in amida_items if item["title"]]
 
+    # 更新実行許可を発行
+    session[f"{amida_id_b62}_do_update_once"] = True
+
     return render_template("amida/update.html", amida_id_b62=amida_id_b62,
                                                 amida=amida,
                                                 amida_items=amida_items,
@@ -64,6 +67,10 @@ def update(amida_id_b62):
 @user_auth_required
 def do_update(amida_id_b62):
     """設定変更実行"""
+
+    if not session.pop(f"{amida_id_b62}_do_update_once", None):
+        abort(403, description="不正なアクセスです。")
+
     amida = g.amida
     amida_id = g.amida_id
 
