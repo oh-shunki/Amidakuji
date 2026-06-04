@@ -71,11 +71,9 @@ function validateAll() {
     }
 
     // 検証：管理者パスワード
-    if (mode == 'create') {
-        if (!adminPwd) {
-            showError("管理パスワードを入力してください");
-            return false;
-        }
+    if (mode == 'create' && !adminPwd) {
+        showError("管理パスワードを入力してください");
+        return false;
     } else if (adminPwd && !validatePwd(adminPwd)) {
         showError("管理パスワードは 3 文字以上 20 文字以内で入力してください");
         return false;
