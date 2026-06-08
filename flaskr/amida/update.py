@@ -6,6 +6,7 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for, abort, g
     )
 
+from .amida_map import get_goals
 from .user_auth import user_auth_required
 from .amida_form import get_and_validate_form
 
@@ -122,6 +123,13 @@ def do_update(amida_id_b62):
 
     if not success:
         abort(500, description="設定変更するとき、不明なエラーが出ました。")
+
+    # 自動開封オンの場合は、余った本数チェック
+    if amida.get("option_auto_open") and db.get_remain_line_count_from_amida(amida_id) == 0:
+        amida_map = db.get_amida(amida_id).get("amida_map")
+        goals = get_goals(amida_map)
+
+        db.do_open(amida_id, goals)
 
     session[f"{amida_id_b62}_update_conform_once"] = True
 
