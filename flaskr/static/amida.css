@@ -31,6 +31,10 @@ main {
     max-width: 650px;
 }
 
+#errorDiv {
+    color: red;
+}
+
 #amidaDiv {
     width: 100%;
     flex: 1;
