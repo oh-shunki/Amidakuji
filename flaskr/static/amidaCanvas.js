@@ -15,6 +15,7 @@ const DELAY = 2000; // 循環表示待機時間
 
 const EMPTY = 0, RIGHT = 1, LEFT = -1;
 
+const startShowRouteLoopBtn = document.getElementById("startShowRouteLoopBtn");
 let stopLoop = false;
 
 const canvasContainer = document.getElementById('canvasContainer');
@@ -173,6 +174,13 @@ function clearRoute() {
 function hideRoute() {
     stopLoop = true;
     clearRoute();
+    startShowRouteLoopBtn.disabled = false;
+}
+
+// 循環表示開始
+function startShowRouteLoop() {
+    startShowRouteLoopBtn.disabled = true;
+    showRouteLoop();
 }
 
 // ルートの表示ループ
@@ -189,12 +197,6 @@ async function showRouteLoop() {
             await sleep(DELAY);
         }
     }
-}
-
-// ルート表示ループを停止する
-function stopShowRouteLoop() {
-    stopLoop = true;
-    clearRoute();
 }
 
 // ページ読み込み時と、画面サイズ変更時に初期化登録
