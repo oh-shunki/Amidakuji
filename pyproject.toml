@@ -1,6 +1,6 @@
 [project]
 name = "amidakuji"
-version = "0.9.1"
+version = "0.9.5"
 description = "あみだくじアプリ"
 readme = "README.md"
 requires-python = ">=3.14"
